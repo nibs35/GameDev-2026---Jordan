@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T1A02 Tables - Jordan</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            background-color: #24476b;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #b7c8d9;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #24476b;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #eef3f9;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        img {
+            width: 120px;
+            border-radius: 8px;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>T1A02 Tables - Jordan</h1>
+
+    <div class="section">
+        <h2>Table 1: Basic Table</h2>
+
+        <table>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Table 2: 3 × 4 Table</h2>
+        <p>A table with 3 rows and 4 columns.</p>
+
+        <table>
+            <tr>
+                <th>Column 1</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+                <th>Column 4</th>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>B</td>
+                <td>C</td>
+                <td>D</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Table 3: Links and Images</h2>
+
+        <table style="border: 0;">
+            <tr>
+                <td style="border: 0;">
+                    <a href="https://www.google.com">
+                        Visit Google
+                    </a>
+                </td>
+                <td style="border: 0;">
+                    <a href="https://www.wikipedia.org">
+                        Visit Wikipedia
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 0;">
+                    <a href="https://www.google.com">
+                        <img src="https://www.google.com/favicon.ico"
+                             alt="Google logo">
+                    </a>
+                </td>
+                <td style="border: 0;">
+                    <a href="https://www.wikipedia.org">
+                        <img src="https://www.wikipedia.org/static/favicon/wikipedia.ico"
+                             alt="Wikipedia logo">
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Assignment</h2>
+
+        <div class="assignment">
+            <b>Tasks to complete:</b>
+            <ol>
+                <li>Make a 3 × 4 table.</li>
+                <li>Make a link and image table with border = 0.</li>
+            </ol>
+        </div>
+    </div>
+
+    <footer>
+        HTML Tables Project | Created by Jordan
+    </footer>
+
+</body>
+</html>
