@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>t1a06-proper-and-variables-Jordan.html</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 40px;
+        }
+
+        h1 {
+            background-color: #24476b;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+        }
+
+        b {
+            color: #1769aa;
+        }
+
+        button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #376da0;
+        }
+
+        #myDiv01 {
+            background-color: #e3edf8;
+            border-left: 5px solid #24476b;
+            padding: 18px;
+            margin-top: 20px;
+            border-radius: 6px;
+            min-height: 25px;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+        }
+    </style>
+
+    <script>
+        function sayHello() {
+            let myNum = 3;
+            let myString = ' Hello ';
+            let myFloat = 17.5;
+            let myBool = true;
+
+            let myOut = document.getElementById('myDiv01');
+
+            myOut.innerHTML =
+                myNum + myString + myFloat + ', ' + myBool;
+
+            if (myBool) {
+                myOut.innerHTML += ', WOW!';
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <h1>JavaScript: Proper & Variables</h1>
+
+    <div class="card">
+        <h2>Welcome to My JavaScript Page</h2>
+
+        <p>This is <b>bold</b> text.</p>
+
+        <p>
+            Click the button below to see JavaScript variables
+            in action!
+        </p>
+
+        <button onclick="sayHello()">Click Me!</button>
+
+        <div id="myDiv01">
+            Your output will appear here...
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>What This Demonstrates</h2>
+
+        <p><b>Integer:</b> 3</p>
+        <p><b>String:</b> Hello</p>
+        <p><b>Decimal number:</b> 17.5</p>
+        <p><b>Boolean:</b> true</p>
+    </div>
+
+    <footer>
+        JavaScript Practice | Created by Jordan
+    </footer>
+
+</body>
+</html>
