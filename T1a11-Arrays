@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a11-Arrays - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 8px 0;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        .result {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .demo-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a11-Arrays - Jordan</h1>
+
+    <div class="section">
+        <h2>About JavaScript Arrays</h2>
+
+        <div class="assignment">
+            <b>What is an array?</b>
+
+            <p>
+                An array stores multiple values in one variable.
+                Each value has an index starting at 0.
+                Arrays can store names, numbers, and other types of data.
+            </p>
+        </div>
+
+        <p>
+            Reference:
+            <a href="https://www.w3schools.com/js/js_arrays.asp"
+               target="_blank" rel="noopener noreferrer">
+                W3Schools JavaScript Arrays
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example 1: Working Array Code</h2>
+
+        <p>
+            Choose how many array entries to display.
+            The default array contains three names.
+        </p>
+
+        <label for="myText01"><b>Maximum Array Entry:</b></label>
+        <br>
+
+        <input
+            type="number"
+            id="myText01"
+            value="3"
+            min="0"
+            max="3"
+            step="1"
+        >
+
+        <br>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myShowArray()">
+            Example onClick
+        </button>
+
+        <div class="result" id="myDiv01" aria-live="polite">
+            Click the button to display the array.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Example 2: An Array of Numbers</h2>
+
+        <p>
+            This example displays numbers stored in an array
+            and calculates their total.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myShowNumbers()">
+            Show Number Array
+        </button>
+
+        <div class="result" id="myDiv02" aria-live="polite">
+            Your number array will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Example 3: Find the Largest Number</h2>
+
+        <p>
+            This example loops through an array of numbers
+            and finds the largest value.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myFindLargest()">
+            Find Largest Number
+        </button>
+
+        <div class="result" id="myDiv03" aria-live="polite">
+            The largest number will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>What I Learned</h2>
+
+        <ul>
+            <li>How to create a JavaScript array.</li>
+            <li>How array indexes start at zero.</li>
+            <li>How to use a loop to access array entries.</li>
+            <li>How to calculate a total from an array of numbers.</li>
+            <li>How to find the largest value in an array.</li>
+        </ul>
+    </div>
+
+    <footer>
+        T1a11-Arrays Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    function myShowArray() {
+        let myTemp = Number(
+            document.getElementById('myText01').value
+        );
+
+        let myDiv = document.getElementById('myDiv01');
+
+        if (
+            document.getElementById('myText01').value.trim() === '' ||
+            !Number.isInteger(myTemp) ||
+            myTemp < 0 ||
+            myTemp > 3
+        ) {
+            myDiv.innerHTML =
+                'Please enter a whole number from 0 to 3.';
+            return;
+        }
+
+        let myArray = new Array();
+
+        myArray[0] = 'Jordan';
+        myArray[1] = 'Mary';
+        myArray[2] = 'Lizzy';
+
+        let mySum = '';
+
+        for (let myLoop = 0; myLoop < myTemp; myLoop++) {
+            mySum +=
+                'Loop #: ' + myLoop +
+                ' | Array entry: ' + myArray[myLoop] +
+                '<br>';
+        }
+
+        if (myTemp === 0) {
+            mySum = 'No array entries selected.';
+        }
+
+        myDiv.innerHTML = mySum;
+    }
+
+    function myShowNumbers() {
+        let myNumbers = [10, 20, 30, 40, 50];
+        let myTotal = 0;
+        let myOutput = '<b>Number Array:</b><br>';
+
+        for (let i = 0; i < myNumbers.length; i++) {
+            myOutput +=
+                'Index ' + i + ': ' + myNumbers[i] + '<br>';
+
+            myTotal += myNumbers[i];
+        }
+
+        myOutput += '<br><b>Total: ' + myTotal + '</b>';
+
+        document.getElementById('myDiv02').innerHTML = myOutput;
+    }
+
+    function myFindLargest() {
+        let myNumbers = [12, 45, 7, 89, 23];
+        let myLargest = myNumbers[0];
+
+        for (let i = 1; i < myNumbers.length; i++) {
+            if (myNumbers[i] > myLargest) {
+                myLargest = myNumbers[i];
+            }
+        }
+
+        document.getElementById('myDiv03').innerHTML =
+            'Numbers: ' + myNumbers.join(', ') +
+            '<br><br>Largest number: ' + myLargest;
+    }
+</script>
+
+</body>
+</html>
+```
