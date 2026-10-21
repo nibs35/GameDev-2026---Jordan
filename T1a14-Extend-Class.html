@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a14-Extend-Class - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 8px 0;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        .result {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .demo-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a14-Extend-Class - Jordan</h1>
+
+    <div class="section">
+        <h2>About Classes and Inheritance</h2>
+
+        <div class="assignment">
+            <b>What is a class?</b>
+
+            <p>
+                A JavaScript class is a template for creating objects.
+                A class can contain properties and methods.
+                Another class can extend an existing class to reuse
+                its properties and methods.
+            </p>
+        </div>
+
+        <p>
+            Reference:
+            <a href="https://www.w3schools.com/js/js_classes.asp"
+               target="_blank" rel="noopener noreferrer">
+                W3Schools JavaScript Classes
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example 1: Creating an Animal Class</h2>
+
+        <p>
+            This example creates an animal with a name and an age.
+            Click the button to create an animal named Snickers.
+        </p>
+
+        <pre><code>class myAnimal {
+    constructor(myName, myAge) {
+        this.myName = myName;
+        this.myAge = myAge;
+    }
+
+    myShow() {
+        document.getElementById('myDiv01').innerHTML =
+            'Hello ' + this.myName;
+    }
+}</code></pre>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myShowAnimal()">
+            Example Class Set and Show Class Animal
+        </button>
+    </div>
+
+    <div class="section">
+        <h2>Example 2: Extending a Class</h2>
+
+        <p>
+            The cat class extends the animal class. It inherits
+            the name and age properties and has its own version
+            of the myShow() method.
+        </p>
+
+        <label for="myText01"><b>Custom cat name:</b></label>
+        <br>
+
+        <input
+            type="text"
+            id="myText01"
+            value="Fluffy"
+            maxlength="40"
+        >
+
+        <br>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myShowCat()">
+            Example Extend Class Animal
+        </button>
+
+        <div class="result" id="myDiv01" aria-live="polite">
+            Your animal or cat result will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>What I Learned</h2>
+
+        <ul>
+            <li>How to create a JavaScript class.</li>
+            <li>How to use a constructor to set properties.</li>
+            <li>How to create objects from a class.</li>
+            <li>How to extend an existing class with inheritance.</li>
+            <li>How a child class can override a parent method.</li>
+        </ul>
+    </div>
+
+    <footer>
+        T1a14-Extend-Class Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    // Create a basic animal class
+    class myAnimal {
+        constructor(myName, myAge) {
+            this.myName = myName;
+            this.myAge = myAge;
+        }
+
+        myShow() {
+            document.getElementById('myDiv01').innerHTML =
+                'Hello ' + this.myName +
+                '<br>Age: ' + this.myAge;
+        }
+    }
+
+    // Create a cat class that extends the animal class
+    class myCat extends myAnimal {
+        myShow() {
+            document.getElementById('myDiv01').innerHTML =
+                this.myName +
+                ' is a great cat!' +
+                '<br>Age: ' + this.myAge +
+                '<br>This cat inherits properties from myAnimal.';
+        }
+    }
+
+    // Example 1: Create and display an animal
+    function myShowAnimal() {
+        let myDog = new myAnimal('Snickers', 5);
+        myDog.myShow();
+    }
+
+    // Example 2: Create and display a cat
+    function myShowCat() {
+        let myCatName =
+            document.getElementById('myText01').value.trim();
+
+        if (myCatName === '') {
+            document.getElementById('myDiv01').textContent =
+                'Please enter a name for your cat.';
+            return;
+        }
+
+        let myPet = new myCat(myCatName, 14);
+        myPet.myShow();
+    }
+</script>
+
+</body>
+</html>
+```
