@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a05-InputOutput - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+            color: #263445;
+        }
+
+        input[type="button"] {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        input[type="button"]:hover {
+            background-color: #1769aa;
+        }
+
+        #myDiv01 {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+            color: #263445;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            input[type="button"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a05-InputOutput - Jordan</h1>
+
+    <div class="section">
+        <h2>About This Page</h2>
+
+        <div class="assignment">
+            <b>HTML Input and Output</b>
+
+            <p>
+                This page demonstrates how JavaScript can receive
+                information from an input box, perform a calculation,
+                and display the answer on the webpage.
+            </p>
+        </div>
+
+        <p>
+            Good reference:
+            <a href="https://www.w3schools.com/jsref/prop_html_innerhtml.asp"
+               target="_blank" rel="noopener noreferrer">
+                JavaScript innerHTML Reference
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example 1: Input and Output Code</h2>
+
+        <p>
+            JavaScript can read a value from an input element and
+            change the contents of another element using innerHTML.
+        </p>
+
+        <pre><code>let myIn01 =
+    document.getElementById('myNum01').value;
+
+document.getElementById('myDiv01').innerHTML = 'Hi';</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>Example 2: Calculate a Number Squared</h2>
+
+        <p>
+            Enter a number below and click the button to calculate
+            its square.
+        </p>
+
+        <label for="myNum01"><b>Enter a number:</b></label>
+        <br>
+
+        <input
+            id="myNum01"
+            type="number"
+            value="4"
+            step="any"
+        >
+
+        <br>
+
+        <input
+            type="button"
+            value="Calculate Square"
+            onclick="mySquareFunction()"
+        >
+
+        <div id="myDiv01" aria-live="polite">
+            Your answer will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>How the JavaScript Works</h2>
+
+        <pre><code>function mySquareFunction() {
+    let myIn01 = parseFloat(
+        document.getElementById('myNum01').value
+    );
+
+    if (document.getElementById('myNum01').value.trim() === ''
+        || !Number.isFinite(myIn01)) {
+        document.getElementById('myDiv01').innerHTML =
+            'Please enter a valid number.';
+        return;
+    }
+
+    let myAnswer = myIn01 * myIn01;
+
+    document.getElementById('myDiv01').innerHTML =
+        myIn01 + ' squared = ' + myAnswer;
+}</code></pre>
+    </div>
+
+    <footer>
+        T1a05-InputOutput Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    function mySquareFunction() {
+        let myInput = document.getElementById('myNum01');
+        let myIn01 = parseFloat(myInput.value);
+        let myOutput = document.getElementById('myDiv01');
+
+        if (myInput.value.trim() === '' ||
+            !Number.isFinite(myIn01)) {
+            myOutput.innerHTML = 'Please enter a valid number.';
+            return;
+        }
+
+        let myAnswer = myIn01 * myIn01;
+
+        myOutput.innerHTML =
+            myIn01 + ' squared = ' + myAnswer;
+    }
+</script>
+
+</body>
+</html>
+```
