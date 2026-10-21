@@ -1,1 +1,307 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a09-Functions - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 8px 0;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        #myDiv01 {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .demo-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a09-Functions - Jordan</h1>
+
+    <div class="section">
+        <h2>About JavaScript Functions</h2>
+
+        <div class="assignment">
+            <b>What is a function?</b>
+
+            <p>
+                Functions are used to organize code so it can be
+                called and reused elsewhere. Information can also
+                be passed to functions using parameters.
+            </p>
+        </div>
+
+        <p>
+            Good reference:
+            <a href="https://www.w3schools.com/js/js_functions.asp"
+               target="_blank" rel="noopener noreferrer">
+                W3Schools JavaScript Functions
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example 1: Function Code</h2>
+
+        <p>
+            This function reads a number, calculates its square,
+            and returns a message with the answer.
+        </p>
+
+        <pre><code>function myExampleFunction() {
+    let myIn01 = parseFloat(
+        document.getElementById('myText01').value
+    );
+
+    let mySum = myIn01 * myIn01;
+
+    let myReply =
+        myIn01 + ' * ' + myIn01 + ' = ' + mySum;
+
+    return myReply;
+}</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>Example 2: Working Function</h2>
+
+        <p>
+            Enter a number and click the button to call the
+            JavaScript function and display the result.
+        </p>
+
+        <label for="myText01"><b>Enter a number:</b></label>
+        <br>
+
+        <input
+            type="number"
+            id="myText01"
+            value="3"
+            step="any"
+        >
+
+        <br>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="document.getElementById('myDiv01').innerHTML = myExampleFunction()">
+            Function Example
+        </button>
+
+        <div id="myDiv01" aria-live="polite">
+            Your answer will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Example 3: Calling a Function with Parameters</h2>
+
+        <p>
+            This extra example shows how a function can receive
+            a number as a parameter.
+        </p>
+
+        <label for="myNumber02"><b>Enter another number:</b></label>
+        <br>
+
+        <input
+            type="number"
+            id="myNumber02"
+            value="5"
+            step="any"
+        >
+
+        <br>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myParameterFunction()">
+            Calculate with Parameters
+        </button>
+
+        <div id="myDiv02" aria-live="polite">
+            The parameter example will appear here.
+        </div>
+    </div>
+
+    <footer>
+        T1a09-Functions Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    function myExampleFunction() {
+        let myText = document.getElementById('myText01');
+        let myIn01 = parseFloat(myText.value);
+
+        if (myText.value.trim() === '' ||
+            !Number.isFinite(myIn01)) {
+            return 'Please enter a valid number.';
+        }
+
+        let mySum = myIn01 * myIn01;
+
+        let myReply =
+            myIn01 + ' * ' + myIn01 + ' = ' + mySum;
+
+        return myReply;
+    }
+
+    function myParameterFunction() {
+        let myInput = document.getElementById('myNumber02');
+        let myOutput = document.getElementById('myDiv02');
+        let myNumber = parseFloat(myInput.value);
+
+        if (myInput.value.trim() === '' ||
+            !Number.isFinite(myNumber)) {
+            myOutput.innerHTML = 'Please enter a valid number.';
+            return;
+        }
+
+        let myResult = mySquare(myNumber);
+
+        myOutput.innerHTML =
+            myNumber + ' squared = ' + myResult;
+    }
+
+    function mySquare(number) {
+        return number * number;
+    }
+</script>
+
+</body>
+</html>
+``` 
