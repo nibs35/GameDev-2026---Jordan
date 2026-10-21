@@ -1,0 +1,367 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TLA02 Three.js - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 28px 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px #ccd5df;
+            margin: 0 0 25px;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        p {
+            margin-top: 8px;
+        }
+
+        .section {
+            background-color: #ffffff;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .intro {
+            background-color: #dceaf7;
+            border-left: 5px solid #24476b;
+            padding: 15px 18px;
+            border-radius: 7px;
+        }
+
+        .demo-button {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin: 8px 8px 8px 0;
+            background-color: #24476b;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+            transform: translateY(-2px);
+        }
+
+        .demo-button:focus-visible {
+            outline: 3px solid #8aaed0;
+            outline-offset: 3px;
+        }
+
+        .visual-output {
+            margin-top: 16px;
+            min-height: 30px;
+            padding: 12px;
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .visual-output canvas {
+            display: block;
+            max-width: 100%;
+            border-radius: 6px;
+        }
+
+        .hint {
+            color: #526579;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                padding: 22px 14px;
+                font-size: 1.6rem;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            .demo-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+<main>
+
+    <h1>TLA02 Three.js - Jordan</h1>
+
+    <div class="section">
+        <h2>About This Page</h2>
+
+        <div class="intro">
+            <b>Interactive JavaScript Demos</b>
+
+            <p>
+                Use the buttons below to create a Plotly graph
+                or an animated Three.js scene.
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Demo 1: Plotly Graph</h2>
+
+        <p>
+            This example creates an interactive graph with
+            lines and markers.
+        </p>
+
+        <button class="demo-button" id="plotlyButton" type="button">
+            Show Plotly
+        </button>
+
+        <div class="visual-output" id="plotlyOutput" aria-live="polite">
+            <span class="hint">
+                Click "Show Plotly" to display the graph here.
+            </span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Demo 2: Three.js Animation</h2>
+
+        <p>
+            This example creates a 3D scene with a moving green point.
+        </p>
+
+        <button class="demo-button" id="threeButton" type="button">
+            Show Three.js
+        </button>
+
+        <div class="visual-output" id="threeOutput" aria-live="polite">
+            <span class="hint">
+                Click "Show Three.js" to start the 3D animation here.
+            </span>
+        </div>
+    </div>
+
+    <footer>
+        HTML and JavaScript Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    document.getElementById("plotlyButton").addEventListener("click", function () {
+
+        const output = document.getElementById("plotlyOutput");
+        output.innerHTML = "";
+
+        if (typeof Plotly === "undefined") {
+            output.textContent =
+                "Plotly could not load. Check your internet connection and try again.";
+            return;
+        }
+
+        const plotDiv = document.createElement("div");
+
+        plotDiv.style.width = "100%";
+        plotDiv.style.maxWidth = "700px";
+        plotDiv.style.height = "300px";
+
+        output.appendChild(plotDiv);
+
+        let mySocketX = [0, 1, 2];
+        let mySocketY = [0, 2, 1];
+
+        Plotly.newPlot(plotDiv, [
+            {
+                x: mySocketX,
+                y: mySocketY,
+                mode: "lines+markers",
+
+                line: {
+                    color: "#24476b",
+                    width: 3
+                },
+
+                marker: {
+                    color: "#1769aa",
+                    size: 10
+                }
+            }
+        ], {
+            title: "My Plotly Graph",
+
+            margin: {
+                t: 45,
+                b: 45,
+                l: 45,
+                r: 15
+            },
+
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+
+            xaxis: {
+                title: "X Values",
+                gridcolor: "#dceaf7"
+            },
+
+            yaxis: {
+                title: "Y Values",
+                gridcolor: "#dceaf7"
+            },
+
+            autosize: true
+
+        }, {
+            responsive: true,
+            displaylogo: false
+        });
+    });
+
+
+    document.getElementById("threeButton").addEventListener("click", function () {
+
+        const output = document.getElementById("threeOutput");
+        output.innerHTML = "";
+
+        if (typeof THREE === "undefined") {
+            output.textContent =
+                "Three.js could not load. Check your internet connection and try again.";
+            return;
+        }
+
+        const width = Math.min(
+            500,
+            Math.max(250, output.clientWidth - 26)
+        );
+
+        const height = 250;
+
+        let myScene = new THREE.Scene();
+
+        myScene.background = new THREE.Color("#f5f8fc");
+
+        let myCamera = new THREE.PerspectiveCamera(
+            75,
+            width / height,
+            0.1,
+            1000
+        );
+
+        let myRenderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+
+        myRenderer.setSize(width, height);
+
+        myRenderer.setPixelRatio(
+            Math.min(window.devicePixelRatio || 1, 2)
+        );
+
+        output.appendChild(myRenderer.domElement);
+
+        let myPoints = new Float32Array([0, 0, 0]);
+
+        let myGeometry = new THREE.BufferGeometry();
+
+        myGeometry.setAttribute(
+            "position",
+            new THREE.BufferAttribute(myPoints, 3)
+        );
+
+        let myMaterial = new THREE.PointsMaterial({
+            color: 0x00aa66,
+            size: 10,
+            sizeAttenuation: false
+        });
+
+        let myPixel = new THREE.Points(
+            myGeometry,
+            myMaterial
+        );
+
+        myScene.add(myPixel);
+
+        myCamera.position.z = 5;
+
+
+        function myRunAnimation() {
+
+            if (!output.contains(myRenderer.domElement)) {
+                myRenderer.dispose();
+                myGeometry.dispose();
+                myMaterial.dispose();
+                return;
+            }
+
+            myPixel.position.x = (Math.random() - 0.5) * 3;
+            myPixel.position.y = (Math.random() - 0.5) * 3;
+
+            myRenderer.render(myScene, myCamera);
+
+            window.setTimeout(function () {
+                requestAnimationFrame(myRunAnimation);
+            }, 100);
+        }
+
+        myRunAnimation();
+
+    });
+</script>
+
+</body>
+</html>
+```
