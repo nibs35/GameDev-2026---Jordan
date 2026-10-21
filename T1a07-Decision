@@ -1,0 +1,329 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a07-Decision - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 8px 0;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        .result {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            font-size: 17px;
+            font-weight: bold;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .demo-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a07-Decision - Jordan</h1>
+
+    <div class="section">
+        <h2>About Decision Making</h2>
+
+        <div class="assignment">
+            <b>JavaScript If Statements</b>
+
+            <p>
+                Decision making allows JavaScript to run different
+                code depending on whether a condition is true or false.
+                This page demonstrates simple if statements,
+                if...else statements, and complex conditions.
+            </p>
+        </div>
+
+        <p>
+            Enter a number and test the examples below.
+        </p>
+
+        <p>
+            Reference:
+            <a href="https://www.w3schools.com/js/js_if_else.asp"
+               target="_blank" rel="noopener noreferrer">
+                W3Schools JavaScript If...Else
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example Working Code</h2>
+
+        <label for="myNum01"><b>Enter a number:</b></label>
+        <br>
+
+        <input
+            id="myNum01"
+            type="number"
+            value="4"
+            step="any"
+        >
+
+        <h3>Example 1: Simple If Statement</h3>
+
+        <p>
+            If the number is greater than or equal to 3,
+            the message will appear.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="mySimpleIf()">
+            Simple If Statement
+        </button>
+
+        <h3>Example 2: If...Else Statement</h3>
+
+        <p>
+            This checks whether the number is greater than or equal
+            to 3. Otherwise, it displays a different message.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myIfElse()">
+            If...Else
+        </button>
+
+        <h3>Example 3: Complex If Statement</h3>
+
+        <p>
+            This checks whether the number is not equal to 3,
+            or is less than -3, and is also less than or equal to 100.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myComplexIf()">
+            Complex If
+        </button>
+
+        <div class="result" id="myDiv01" aria-live="polite">
+            Your result will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>What I Learned</h2>
+
+        <ul>
+            <li>How to use a simple if statement.</li>
+            <li>How to use if...else to choose between two outcomes.</li>
+            <li>How to combine conditions using logical operators.</li>
+            <li>How to display results with JavaScript and innerHTML.</li>
+        </ul>
+    </div>
+
+    <footer>
+        T1a07-Decision Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    function myGetNumber() {
+        let myInput = document.getElementById('myNum01');
+
+        if (myInput.value.trim() === '') {
+            document.getElementById('myDiv01').innerHTML =
+                'Please enter a number.';
+            return null;
+        }
+
+        let myIn01 = Number(myInput.value);
+
+        if (!Number.isFinite(myIn01)) {
+            document.getElementById('myDiv01').innerHTML =
+                'Please enter a valid number.';
+            return null;
+        }
+
+        return myIn01;
+    }
+
+    function mySimpleIf() {
+        let myIn01 = myGetNumber();
+
+        if (myIn01 === null) {
+            return;
+        }
+
+        if (myIn01 >= 3) {
+            document.getElementById('myDiv01').innerHTML =
+                myIn01 + ' is greater than or equal to 3.';
+        } else {
+            document.getElementById('myDiv01').innerHTML =
+                'The number is less than 3, so the if condition is false.';
+        }
+    }
+
+    function myIfElse() {
+        let myIn01 = myGetNumber();
+
+        if (myIn01 === null) {
+            return;
+        }
+
+        if (myIn01 >= 3) {
+            document.getElementById('myDiv01').innerHTML =
+                myIn01 + ' is greater than or equal to 3.';
+        } else {
+            document.getElementById('myDiv01').innerHTML =
+                myIn01 + ' is less than 3.';
+        }
+    }
+
+    function myComplexIf() {
+        let myIn01 = myGetNumber();
+
+        if (myIn01 === null) {
+            return;
+        }
+
+        if ((myIn01 != 3 || myIn01 < -3) && myIn01 <= 100) {
+            document.getElementById('myDiv01').innerHTML =
+                myIn01 + ' meets the complex condition.';
+        } else {
+            document.getElementById('myDiv01').innerHTML =
+                myIn01 + ' does not meet the complex condition.';
+        }
+    }
+</script>
+
+</body>
+</html>
+```
