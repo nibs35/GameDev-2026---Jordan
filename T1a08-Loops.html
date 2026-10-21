@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1a08-Loops - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #24476b, #35658f);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #35658f;
+        }
+
+        .section {
+            background-color: white;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .assignment {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #d97706;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 8px 0;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        .result {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 18px;
+            min-height: 55px;
+            color: #24476b;
+            overflow-wrap: anywhere;
+        }
+
+        .result-line {
+            padding: 5px 0;
+            border-bottom: 1px solid #dceaf7;
+        }
+
+        .highlight {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
+        pre {
+            background-color: #f5f8fc;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .demo-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>T1a08-Loops - Jordan</h1>
+
+    <div class="section">
+        <h2>About JavaScript Loops</h2>
+
+        <div class="assignment">
+            <b>What is a loop?</b>
+
+            <p>
+                A loop repeats a block of code multiple times.
+                A for loop is useful when you know how many times
+                you want the code to repeat. Loops can also use
+                decisions to check conditions.
+            </p>
+        </div>
+
+        <p>
+            Reference:
+            <a href="https://www.w3schools.com/js/js_loop_for.asp"
+               target="_blank" rel="noopener noreferrer">
+                W3Schools JavaScript For Loops
+            </a>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example Input Code</h2>
+
+        <pre><code>for (let myLoop = 0; myLoop < myMax; myLoop++) {
+    // Your code here
+}</code></pre>
+
+        <p>
+            The loop starts at zero and repeats until the loop
+            counter reaches the maximum number.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Example Working Code</h2>
+
+        <label for="myNum01">Max loops:</label>
+        <input
+            id="myNum01"
+            type="number"
+            value="4"
+            min="0"
+            max="50"
+            step="1"
+        >
+
+        <label for="myWeird">Weird number:</label>
+        <input
+            id="myWeird"
+            type="number"
+            value="2"
+            step="1"
+        >
+
+        <h3>Example 1: Basic For Loop with Decisions</h3>
+
+        <p>
+            This loop displays each loop number. If the loop
+            counter is greater than 2 and matches the weird number,
+            it adds the word "cool".
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myBasicLoop()">
+            Basic For Loop with Decisions
+        </button>
+
+        <h3>Example 2: Even Number Identifier</h3>
+
+        <p>
+            This loop checks every loop number and identifies
+            which numbers are even.
+        </p>
+
+        <button
+            class="demo-button"
+            type="button"
+            onclick="myEvenLoop()">
+            Even Number Identifier
+        </button>
+
+        <div class="result" id="myDiv01" aria-live="polite">
+            Your loop results will appear here.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>What I Learned</h2>
+
+        <ul>
+            <li>How to create a for loop.</li>
+            <li>How to use a loop counter.</li>
+            <li>How to make decisions inside a loop.</li>
+            <li>How to identify even numbers using the remainder operator.</li>
+            <li>How to display loop results on a webpage.</li>
+        </ul>
+    </div>
+
+    <footer>
+        T1a08-Loops Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    function myGetInputs() {
+        let maxInput = document.getElementById('myNum01');
+        let weirdInput = document.getElementById('myWeird');
+
+        let myMax = Number(maxInput.value);
+        let myWeird = Number(weirdInput.value);
+
+        if (
+            maxInput.value.trim() === '' ||
+            !Number.isInteger(myMax) ||
+            myMax < 0 ||
+            myMax > 50
+        ) {
+            document.getElementById('myDiv01').textContent =
+                'Please enter a whole number of loops from 0 to 50.';
+            return null;
+        }
+
+        if (
+            weirdInput.value.trim() === '' ||
+            !Number.isFinite(myWeird)
+        ) {
+            document.getElementById('myDiv01').textContent =
+                'Please enter a valid weird number.';
+            return null;
+        }
+
+        return {
+            myMax: myMax,
+            myWeird: myWeird
+        };
+    }
+
+    function myBasicLoop() {
+        let inputs = myGetInputs();
+
+        if (inputs === null) {
+            return;
+        }
+
+        let myTemp = '';
+
+        for (
+            let myLoop = 0;
+            myLoop < inputs.myMax;
+            myLoop++
+        ) {
+            if (
+                myLoop > 2 &&
+                myLoop === inputs.myWeird
+            ) {
+                myTemp +=
+                    '<div class="result-line">' +
+                    'Loop number: ' + myLoop +
+                    ' <span class="highlight">cool!</span>' +
+                    '</div>';
+            } else {
+                myTemp +=
+                    '<div class="result-line">' +
+                    'Loop number: ' + myLoop +
+                    '</div>';
+            }
+        }
+
+        if (inputs.myMax === 0) {
+            myTemp = 'No loops to display.';
+        }
+
+        document.getElementById('myDiv01').innerHTML = myTemp;
+    }
+
+    function myEvenLoop() {
+        let inputs = myGetInputs();
+
+        if (inputs === null) {
+            return;
+        }
+
+        let myTemp = '';
+
+        for (
+            let myLoop = 0;
+            myLoop < inputs.myMax;
+            myLoop++
+        ) {
+            if (myLoop % 2 === 0) {
+                myTemp +=
+                    '<div class="result-line">' +
+                    '<span class="highlight">Even Number:</span> ' +
+                    myLoop +
+                    ' | Loop number: ' + myLoop +
+                    '</div>';
+            } else {
+                myTemp +=
+                    '<div class="result-line">' +
+                    'Loop number: ' + myLoop +
+                    '</div>';
+            }
+        }
+
+        if (inputs.myMax === 0) {
+            myTemp = 'No loops to display.';
+        }
+
+        document.getElementById('myDiv01').innerHTML = myTemp;
+    }
+</script>
+
+</body>
+</html>
+```
