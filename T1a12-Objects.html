@@ -38,16 +38,12 @@
             padding-bottom: 8px;
         }
 
-        h3 {
-            color: #24476b;
-        }
-
         p {
             color: #263445;
         }
 
         .section {
-            background-color: white;
+            background-color: #ffffff;
             padding: 20px;
             margin: 25px 0;
             border-radius: 12px;
@@ -72,7 +68,7 @@
 
         .demo-button {
             background-color: #24476b;
-            color: white;
+            color: #ffffff;
             border: none;
             padding: 12px 20px;
             border-radius: 8px;
@@ -80,12 +76,10 @@
             font-weight: bold;
             cursor: pointer;
             margin: 10px 0;
-            transition: 0.2s;
         }
 
         .demo-button:hover {
             background-color: #1769aa;
-            transform: translateY(-2px);
         }
 
         input[type="text"] {
@@ -102,7 +96,7 @@
 
         input[type="text"]:focus {
             outline: 2px solid #8aaed0;
-            border-color: #24476b;
+            outline-offset: 2px;
         }
 
         .result {
@@ -132,11 +126,13 @@
             text-align: center;
             color: #718096;
             margin-top: 30px;
+            font-size: 14px;
         }
 
         @media (max-width: 600px) {
             body {
-                margin: 15px;
+                margin: 0;
+                padding: 15px;
             }
 
             h1 {
@@ -149,7 +145,7 @@
             }
 
             .demo-button {
-                max-width: 100%;
+                width: 100%;
             }
         }
     </style>
@@ -168,10 +164,9 @@
             <b>What is an object?</b>
 
             <p>
-                Objects are stored in named variables and contain
-                properties that describe something. For example,
-                a person object can store a first name, last name,
-                age, and eye color.
+                A JavaScript object stores related information
+                using properties. For example, a person object
+                can contain a first name, last name, age, and eye color.
             </p>
         </div>
 
@@ -194,10 +189,10 @@
         </p>
 
         <pre><code>let myPerson = {
-    'firstName': 'John',
-    'lastName': 'Doe',
-    'age': 50,
-    'eyeColor': 'blue'
+    firstName: 'John',
+    lastName: 'Doe',
+    age: 50,
+    eyeColor: 'blue'
 };</code></pre>
 
         <button
@@ -207,108 +202,4 @@
             Example Object Set and Show
         </button>
 
-        <div class="result" id="myDiv01" aria-live="polite">
-            Your object results will appear here.
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>Try Your Own Object</h2>
-
-        <p>Change the person's first name and display the object.</p>
-
-        <label for="myText01">First name:</label>
-        <br>
-
-        <input
-            type="text"
-            id="myText01"
-            value="Jordan"
-            maxlength="40"
-        >
-
-        <br>
-
-        <button
-            class="demo-button"
-            type="button"
-            onclick="myShowCustomPerson()">
-            Show My Object
-        </button>
-    </div>
-
-    <div class="section">
-        <h2>Local and Global Variables</h2>
-
-        <p>
-            A global variable can be accessed from different parts
-            of a script. A local variable is only available within
-            the function or block where it is declared.
-        </p>
-
-        <div class="assignment">
-            <b>Why declare objects inside a script tag?</b>
-
-            <p>
-                Declaring an object inside a script allows
-                JavaScript to use its properties and methods.
-                Using <code>let</code> or <code>const</code> helps
-                keep variables organized and avoids unnecessary
-                global variables.
-            </p>
-        </div>
-    </div>
-
-    <footer>
-        T1a12-Objects Project | Created by Jordan
-    </footer>
-
-</main>
-
-<script>
-    // Example object from the assignment
-    function myShowPerson() {
-        let myPerson = {
-            firstName: 'John',
-            lastName: 'Doe',
-            age: 50,
-            eyeColor: 'blue'
-        };
-
-        document.getElementById('myDiv01').innerHTML =
-            '<b>My Person Object has properties:</b><br>' +
-            'First name: ' + myPerson.firstName + '<br>' +
-            'Last name: ' + myPerson.lastName + '<br>' +
-            'Age: ' + myPerson.age + '<br>' +
-            'Eye color: ' + myPerson.eyeColor;
-    }
-
-    // Example using a custom first name
-    function myShowCustomPerson() {
-        let myName =
-            document.getElementById('myText01').value.trim();
-
-        if (myName === '') {
-            document.getElementById('myDiv01').textContent =
-                'Please enter a first name.';
-            return;
-        }
-
-        let myPerson = {
-            firstName: myName,
-            lastName: 'Shepherd',
-            age: 16,
-            eyeColor: 'blue'
-        };
-
-        document.getElementById('myDiv01').textContent =
-            'First name: ' + myPerson.firstName +
-            ' | Last name: ' + myPerson.lastName +
-            ' | Age: ' + myPerson.age +
-            ' | Eye color: ' + myPerson.eyeColor;
-    }
-</script>
-
-</body>
-</html>
-```
+        <div class="result
