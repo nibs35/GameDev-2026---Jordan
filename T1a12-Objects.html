@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,12 +22,12 @@
 
         main {
             max-width: 850px;
-            margin: 0 auto;
+            margin: auto;
         }
 
         h1 {
             text-align: center;
-            color: #ffffff;
+            color: white;
             background-color: #24476b;
             padding: 25px;
             border-radius: 12px;
@@ -38,12 +39,8 @@
             padding-bottom: 8px;
         }
 
-        p {
-            color: #263445;
-        }
-
         .section {
-            background-color: #ffffff;
+            background-color: white;
             padding: 20px;
             margin: 25px 0;
             border-radius: 12px;
@@ -57,6 +54,58 @@
             border-radius: 6px;
         }
 
+        .demo-button {
+            display: block;
+            width: 100%;
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .demo-button:hover {
+            background-color: #1769aa;
+        }
+
+        .person-card {
+            background-color: #eef3f9;
+            border: 2px solid #8aaed0;
+            border-radius: 12px;
+            padding: 22px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .person-emoji {
+            font-size: 65px;
+            margin: 5px;
+        }
+
+        .person-name {
+            color: #24476b;
+            font-size: 26px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .person-info {
+            text-align: left;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .counter {
+            color: #1769aa;
+            font-weight: bold;
+        }
+
         a {
             color: #1769aa;
             font-weight: bold;
@@ -66,108 +115,46 @@
             color: #d97706;
         }
 
-        .demo-button {
-            background-color: #24476b;
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-
-        .demo-button:hover {
-            background-color: #1769aa;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            max-width: 350px;
-            padding: 12px;
-            margin: 8px 0 15px;
-            border: 1px solid #b7c8d9;
-            border-radius: 7px;
-            background-color: #ffffff;
-            color: #263445;
-            font-size: 16px;
-        }
-
-        input[type="text"]:focus {
-            outline: 2px solid #8aaed0;
-            outline-offset: 2px;
-        }
-
-        .result {
-            background-color: #eef3f9;
-            border: 1px solid #b7c8d9;
-            border-radius: 8px;
-            padding: 18px;
-            margin-top: 18px;
-            min-height: 55px;
-            overflow-wrap: anywhere;
-        }
-
         pre {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
             background-color: #eef3f9;
-            border: 1px solid #b7c8d9;
-            border-radius: 8px;
             padding: 15px;
+            border-radius: 8px;
             overflow-x: auto;
-            color: #24476b;
-        }
-
-        code {
-            font-family: Consolas, monospace;
         }
 
         footer {
             text-align: center;
             color: #718096;
             margin-top: 30px;
-            font-size: 14px;
         }
 
         @media (max-width: 600px) {
             body {
-                margin: 0;
-                padding: 15px;
+                margin: 15px;
             }
 
             h1 {
-                font-size: 26px;
-                padding: 20px;
-            }
-
-            .section {
-                padding: 15px;
-            }
-
-            .demo-button {
-                width: 100%;
+                font-size: 25px;
+                padding: 18px;
             }
         }
     </style>
 </head>
 
 <body>
-
 <main>
 
     <h1>T1a12-Objects - Jordan</h1>
 
     <div class="section">
-        <h2>About JavaScript Objects</h2>
+        <h2>What Are JavaScript Objects?</h2>
 
         <div class="assignment">
-            <b>What is an object?</b>
-
-            <p>
-                A JavaScript object stores related information
-                using properties. For example, a person object
-                can contain a first name, last name, age, and eye color.
-            </p>
+            A JavaScript object stores information using properties.
+            For example, a person object can contain a name, age,
+            eye colour, and a description.
         </div>
 
         <p>
@@ -181,25 +168,122 @@
     </div>
 
     <div class="section">
-        <h2>Example Working Objects Code</h2>
+        <h2>Meet the Dudes</h2>
 
         <p>
-            Click the button to create a person object and display
-            its properties.
+            Click the button to cycle through five different people.
+            Each person is stored as a JavaScript object.
         </p>
 
-        <pre><code>let myPerson = {
-    firstName: 'John',
-    lastName: 'Doe',
-    age: 50,
-    eyeColor: 'blue'
-};</code></pre>
+        <div class="person-card" aria-live="polite">
+            <div class="person-emoji" id="personEmoji">😎</div>
 
-        <button
-            class="demo-button"
-            type="button"
-            onclick="myShowPerson()">
-            Example Object Set and Show
+            <div class="person-name" id="personName">
+                Dude #1
+            </div>
+
+            <div class="counter" id="personCounter">
+                Person 1 of 5
+            </div>
+
+            <div class="person-info" id="personInfo">
+                <p><b>Age:</b> 18</p>
+                <p><b>Eye colour:</b> Blue</p>
+                <p><b>About:</b> Ready to meet the crew!</p>
+            </div>
+        </div>
+
+        <button class="demo-button" type="button" id="nextPerson">
+            Meet the Next Dude →
         </button>
 
-        <div class="result
+        <button class="demo-button" type="button" id="randomPerson">
+            Pick a Random Dude 🎲
+        </button>
+    </div>
+
+    <div class="section">
+        <h2>How the Objects Work</h2>
+
+        <p>
+            Each dude is an object with four properties:
+            <code>name</code>, <code>age</code>,
+            <code>eyeColor</code>, and <code>description</code>.
+        </p>
+
+        <pre><code>const person = {
+    name: "Alex",
+    age: 18,
+    eyeColor: "Blue",
+    description: "Loves gaming"
+};</code></pre>
+
+        <p>
+            JavaScript reads the selected object's properties and
+            updates the information displayed on the page.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Local and Global Variables</h2>
+
+        <p>
+            A global variable can be accessed from different parts
+            of a script. A local variable is only available within
+            the function or block where it is declared.
+        </p>
+
+        <div class="assignment">
+            <b>Remember:</b> Use <code>const</code> when you do not
+            need to reassign a variable, and <code>let</code> when
+            its value needs to change.
+        </div>
+    </div>
+
+    <footer>
+        T1a12-Objects Project | Created by Jordan
+    </footer>
+
+</main>
+
+<script>
+    // Five people stored as JavaScript objects
+    const people = [
+        {
+            name: "Alex",
+            age: 18,
+            eyeColor: "Blue",
+            emoji: "😎",
+            description: "A chill dude who loves gaming."
+        },
+        {
+            name: "Marcus",
+            age: 21,
+            eyeColor: "Brown",
+            emoji: "🎸",
+            description: "A music fan who plays guitar."
+        },
+        {
+            name: "Ethan",
+            age: 19,
+            eyeColor: "Green",
+            emoji: "🎮",
+            description: "A competitive gamer who loves winning."
+        },
+        {
+            name: "Noah",
+            age: 22,
+            eyeColor: "Hazel",
+            emoji: "🏀",
+            description: "A basketball player who loves sports."
+        },
+        {
+            name: "Liam",
+            age: 20,
+            eyeColor: "Grey",
+            emoji: "🚀",
+            description: "A curious dude who is into science."
+        }
+    ];
+
+    // The index
