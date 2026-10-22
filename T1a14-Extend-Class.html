@@ -3,35 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>T1a14-Extend-Class - Jordan</title>
+    <title>T1a14 Extend Class - Jordan</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #eef3f9;
             color: #263445;
-            margin: 0;
-            padding: 30px;
-            line-height: 1.6;
-        }
-
-        main {
-            max-width: 950px;
-            margin: 0 auto;
+            margin: 40px;
         }
 
         h1 {
             text-align: center;
             color: white;
-            background: linear-gradient(135deg, #24476b, #35658f);
+            background-color: #24476b;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px #ccd5df;
         }
 
         h2 {
@@ -40,102 +27,88 @@
             padding-bottom: 8px;
         }
 
-        h3 {
-            color: #35658f;
-        }
-
         .section {
             background-color: white;
-            padding: 24px;
+            padding: 20px;
             margin: 25px 0;
             border-radius: 12px;
             box-shadow: 0 3px 10px #ccd5df;
         }
 
-        .assignment {
-            background-color: #dceaf7;
-            padding: 15px;
-            border-left: 5px solid #24476b;
-            border-radius: 6px;
-        }
-
-        a {
-            color: #1769aa;
-            font-weight: bold;
-        }
-
-        a:hover {
-            color: #d97706;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            max-width: 350px;
-            padding: 12px;
-            margin: 8px 0 15px;
-            border: 1px solid #b7c8d9;
-            border-radius: 7px;
-            font-size: 16px;
-        }
-
-        .demo-button {
+        button {
             background-color: #24476b;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 12px 18px;
             margin: 8px 5px 8px 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
         }
 
-        .demo-button:hover {
-            background-color: #1769aa;
+        button:hover {
+            background-color: #376a9c;
+        }
+
+        input {
+            padding: 10px;
+            margin: 6px 8px 10px 0;
+            border: 1px solid #8aaed0;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
         .result {
-            background-color: #f5f8fc;
-            border: 1px solid #b7c8d9;
-            border-radius: 8px;
-            padding: 18px;
-            margin-top: 18px;
-            min-height: 55px;
-            color: #24476b;
+            background-color: #eef3f9;
+            border-left: 5px solid #24476b;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 7px;
+            min-height: 40px;
             overflow-wrap: anywhere;
         }
 
-        pre {
-            background-color: #f5f8fc;
-            border: 1px solid #b7c8d9;
-            border-radius: 8px;
-            padding: 15px;
-            overflow-x: auto;
+        .result h3 {
+            color: #24476b;
+            margin-top: 0;
         }
 
-        footer {
-            text-align: center;
-            color: #718096;
-            margin-top: 30px;
+        .code-note {
+            background-color: #f5f8fc;
+            border: 1px solid #d4e0ec;
+            border-radius: 7px;
             padding: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .success {
+            color: #236b43;
+            font-weight: bold;
+        }
+
+        .hint {
+            color: #52677d;
+            font-size: 14px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #24476b;
         }
 
         @media (max-width: 600px) {
             body {
-                padding: 15px;
-            }
-
-            .section {
-                padding: 18px;
+                margin: 15px;
             }
 
             h1 {
-                font-size: 1.6rem;
+                padding: 18px;
             }
 
-            .demo-button {
-                width: 100%;
-                margin-right: 0;
+            .section {
+                padding: 15px;
             }
         }
     </style>
@@ -143,159 +116,415 @@
 
 <body>
 
-<main>
-
-    <h1>T1a14-Extend-Class - Jordan</h1>
+    <h1>T1A14: Extend Class - Jordan</h1>
 
     <div class="section">
-        <h2>About Classes and Inheritance</h2>
-
-        <div class="assignment">
-            <b>What is a class?</b>
-
-            <p>
-                A JavaScript class is a template for creating objects.
-                A class can contain properties and methods.
-                Another class can extend an existing class to reuse
-                its properties and methods.
-            </p>
-        </div>
+        <h2>What Is a Class?</h2>
 
         <p>
-            Reference:
-            <a href="https://www.w3schools.com/js/js_classes.asp"
-               target="_blank" rel="noopener noreferrer">
-                W3Schools JavaScript Classes
-            </a>
+            A JavaScript class is a blueprint for creating objects.
+            For example, an animal class can store an animal's name and age
+            and provide methods that let the animal do things.
+        </p>
+
+        <p>
+            This page demonstrates creating objects, calling methods,
+            changing object properties, and extending one class with another.
+        </p>
+
+        <p>
+            There are 20 possible random names. Leave the name box empty
+            to choose a random name, or enter your own!
         </p>
     </div>
 
     <div class="section">
-        <h2>Example 1: Creating an Animal Class</h2>
+        <h2>#1. Create an Animal Class</h2>
 
         <p>
-            This example creates an animal with a name and an age.
-            Click the button to create an animal named Snickers.
+            The <code>myAnimal</code> class is the blueprint.
+            Clicking the button creates a real animal object from that class.
         </p>
 
-        <pre><code>class myAnimal {
-    constructor(myName, myAge) {
-        this.myName = myName;
-        this.myAge = myAge;
-    }
-
-    myShow() {
-        document.getElementById('myDiv01').innerHTML =
-            'Hello ' + this.myName;
-    }
-}</code></pre>
-
-        <button
-            class="demo-button"
-            type="button"
-            onclick="myShowAnimal()">
-            Example Class Set and Show Class Animal
-        </button>
-    </div>
-
-    <div class="section">
-        <h2>Example 2: Extending a Class</h2>
-
-        <p>
-            The cat class extends the animal class. It inherits
-            the name and age properties and has its own version
-            of the myShow() method.
-        </p>
-
-        <label for="myText01"><b>Custom cat name:</b></label>
-        <br>
-
+        <label for="animalName">Animal name (optional):</label><br>
         <input
             type="text"
-            id="myText01"
-            value="Fluffy"
-            maxlength="40"
+            id="animalName"
+            placeholder="Leave empty for a random name"
         >
 
         <br>
 
-        <button
-            class="demo-button"
-            type="button"
-            onclick="myShowCat()">
-            Example Extend Class Animal
+        <label for="animalAge">Animal age:</label><br>
+        <input
+            type="number"
+            id="animalAge"
+            value="5"
+            min="0"
+            max="100"
+        >
+
+        <br>
+
+        <button type="button" onclick="createAnimal()">
+            Create Animal Object
         </button>
 
-        <div class="result" id="myDiv01" aria-live="polite">
-            Your animal or cat result will appear here.
+        <button type="button" onclick="animalSpeak()">
+            Make Animal Speak
+        </button>
+
+        <button type="button" onclick="animalBirthday()">
+            Give Animal a Birthday
+        </button>
+
+        <div class="result" id="animalResult" aria-live="polite">
+            No animal created yet. Click "Create Animal Object" to begin.
         </div>
     </div>
 
     <div class="section">
-        <h2>What I Learned</h2>
+        <h2>#2. Extend the Animal Class</h2>
 
-        <ul>
-            <li>How to create a JavaScript class.</li>
-            <li>How to use a constructor to set properties.</li>
-            <li>How to create objects from a class.</li>
-            <li>How to extend an existing class with inheritance.</li>
-            <li>How a child class can override a parent method.</li>
-        </ul>
+        <p>
+            The <code>myCat</code> class extends <code>myAnimal</code>.
+            It inherits the animal's properties and birthday method,
+            but has its own cat-specific speaking method.
+        </p>
+
+        <label for="catName">Cat name (optional):</label><br>
+        <input
+            type="text"
+            id="catName"
+            placeholder="Leave empty for a random name"
+        >
+
+        <br>
+
+        <label for="catAge">Cat age:</label><br>
+        <input
+            type="number"
+            id="catAge"
+            value="3"
+            min="0"
+            max="100"
+        >
+
+        <br>
+
+        <button type="button" onclick="createCat()">
+            Create Cat Object
+        </button>
+
+        <button type="button" onclick="catSpeak()">
+            Make Cat Meow
+        </button>
+
+        <button type="button" onclick="catBirthday()">
+            Give Cat a Birthday
+        </button>
+
+        <div class="result" id="catResult" aria-live="polite">
+            No cat created yet. Create a cat to see inheritance in action.
+        </div>
     </div>
 
-    <footer>
-        T1a14-Extend-Class Project | Created by Jordan
-    </footer>
+    <div class="section">
+        <h2>How the Code Works</h2>
 
-</main>
+        <div class="code-note">
+            <p>
+                <strong>Class:</strong>
+                A blueprint that defines the properties and methods of objects.
+            </p>
 
-<script>
-    // Create a basic animal class
-    class myAnimal {
-        constructor(myName, myAge) {
-            this.myName = myName;
-            this.myAge = myAge;
+            <p>
+                <strong>Constructor:</strong>
+                Sets up an object's name, age, and birthday count.
+            </p>
+
+            <p>
+                <strong>Object:</strong>
+                <code>new myAnimal("Max", 5)</code> creates an animal object.
+            </p>
+
+            <p>
+                <strong>Method:</strong>
+                A function inside a class that an object can use.
+            </p>
+
+            <p>
+                <strong>Inheritance:</strong>
+                <code>myCat extends myAnimal</code> allows the cat class
+                to reuse features from the animal class.
+            </p>
+
+            <p>
+                <strong>Random names:</strong>
+                JavaScript selects one of 20 names when you leave the name
+                field blank.
+            </p>
+        </div>
+
+        <div class="result" id="classInfo" aria-live="polite">
+            Create an animal or cat above to see what happens!
+        </div>
+    </div>
+
+    <script>
+        // 20 possible names shared by the animal and cat examples
+        const randomNames = [
+            "Max",
+            "Bella",
+            "Charlie",
+            "Luna",
+            "Milo",
+            "Daisy",
+            "Rocky",
+            "Lucy",
+            "Buddy",
+            "Coco",
+            "Teddy",
+            "Lola",
+            "Oliver",
+            "Rosie",
+            "Simba",
+            "Molly",
+            "Leo",
+            "Willow",
+            "Oreo",
+            "Cleo"
+        ];
+
+        // Choose a random name from the list
+        function getRandomName() {
+            const randomIndex = Math.floor(
+                Math.random() * randomNames.length
+            );
+
+            return randomNames[randomIndex];
         }
 
-        myShow() {
-            document.getElementById('myDiv01').innerHTML =
-                'Hello ' + this.myName +
-                '<br>Age: ' + this.myAge;
-        }
-    }
+        // Parent class: blueprint for an animal
+        class myAnimal {
+            constructor(myName, myAge) {
+                this.myName = myName;
+                this.myAge = myAge;
+                this.myBirthdayCount = 0;
+            }
 
-    // Create a cat class that extends the animal class
-    class myCat extends myAnimal {
-        myShow() {
-            document.getElementById('myDiv01').innerHTML =
-                this.myName +
-                ' is a great cat!' +
-                '<br>Age: ' + this.myAge +
-                '<br>This cat inherits properties from myAnimal.';
-        }
-    }
+            myShow() {
+                return this.myName + " is an animal.";
+            }
 
-    // Example 1: Create and display an animal
-    function myShowAnimal() {
-        let myDog = new myAnimal('Snickers', 5);
-        myDog.myShow();
-    }
+            mySpeak() {
+                return this.myName + " makes an animal sound!";
+            }
 
-    // Example 2: Create and display a cat
-    function myShowCat() {
-        let myCatName =
-            document.getElementById('myText01').value.trim();
+            myBirthday() {
+                this.myAge++;
+                this.myBirthdayCount++;
 
-        if (myCatName === '') {
-            document.getElementById('myDiv01').textContent =
-                'Please enter a name for your cat.';
-            return;
+                return this.myName + " is now " +
+                    this.myAge + " years old!";
+            }
         }
 
-        let myPet = new myCat(myCatName, 14);
-        myPet.myShow();
-    }
-</script>
+        // Child class: inherits from myAnimal
+        class myCat extends myAnimal {
+            constructor(myName, myAge) {
+                super(myName, myAge);
+            }
+
+            // Override the parent's display method
+            myShow() {
+                return this.myName + " is a great cat!";
+            }
+
+            // Cats have their own speaking method
+            mySpeak() {
+                return this.myName + " says: Meow!";
+            }
+        }
+
+        // Store the objects after they are created
+        let currentAnimal = null;
+        let currentCat = null;
+
+        // Read the name and age entered by the user
+        function getValidDetails(nameId, ageId) {
+            const enteredName = document
+                .getElementById(nameId)
+                .value
+                .trim();
+
+            const ageText = document.getElementById(ageId).value.trim();
+            const age = Number(ageText);
+
+            if (
+                ageText === "" ||
+                !Number.isInteger(age) ||
+                age < 0 ||
+                age > 100
+            ) {
+                alert("Please enter a whole-number age from 0 to 100.");
+                return null;
+            }
+
+            // Use the entered name or select a random one
+            const name = enteredName || getRandomName();
+
+            return {
+                name: name,
+                age: age
+            };
+        }
+
+        // Display an object's current properties and a message
+        function displayObject(elementId, title, object, message) {
+            const result = document.getElementById(elementId);
+
+            // Clear the previous result
+            result.replaceChildren();
+
+            const heading = document.createElement("h3");
+            heading.textContent = title;
+            result.appendChild(heading);
+
+            const nameLine = document.createElement("p");
+            nameLine.textContent = "Name: " + object.myName;
+            result.appendChild(nameLine);
+
+            const ageLine = document.createElement("p");
+            ageLine.textContent = "Age: " + object.myAge;
+            result.appendChild(ageLine);
+
+            const birthdayLine = document.createElement("p");
+            birthdayLine.textContent =
+                "Birthdays celebrated: " + object.myBirthdayCount;
+            result.appendChild(birthdayLine);
+
+            const messageLine = document.createElement("p");
+            messageLine.textContent = message;
+            result.appendChild(messageLine);
+
+            const successLine = document.createElement("p");
+            successLine.className = "success";
+            successLine.textContent = "Object created and ready to use!";
+            result.appendChild(successLine);
+        }
+
+        // #1: Create an animal object
+        function createAnimal() {
+            const details = getValidDetails("animalName", "animalAge");
+
+            if (!details) {
+                return;
+            }
+
+            currentAnimal = new myAnimal(details.name, details.age);
+
+            displayObject(
+                "animalResult",
+                "Animal Object Created!",
+                currentAnimal,
+                currentAnimal.myShow()
+            );
+
+            document.getElementById("classInfo").textContent =
+                "Created " + currentAnimal.myName +
+                " using the myAnimal class. The object stores its own " +
+                "name, age, and birthday count.";
+        }
+
+        // Call the animal's speaking method
+        function animalSpeak() {
+            if (!currentAnimal) {
+                alert("Create an animal object first!");
+                return;
+            }
+
+            displayObject(
+                "animalResult",
+                "Animal Method Called!",
+                currentAnimal,
+                currentAnimal.mySpeak()
+            );
+        }
+
+        // Increase the existing animal's age
+        function animalBirthday() {
+            if (!currentAnimal) {
+                alert("Create an animal object first!");
+                return;
+            }
+
+            const message = currentAnimal.myBirthday();
+
+            displayObject(
+                "animalResult",
+                "Animal Birthday!",
+                currentAnimal,
+                message
+            );
+        }
+
+        // #2: Create a cat object using the child class
+        function createCat() {
+            const details = getValidDetails("catName", "catAge");
+
+            if (!details) {
+                return;
+            }
+
+            currentCat = new myCat(details.name, details.age);
+
+            displayObject(
+                "catResult",
+                "Cat Object Created!",
+                currentCat,
+                currentCat.myShow()
+            );
+
+            document.getElementById("classInfo").textContent =
+                "Created " + currentCat.myName +
+                " using the myCat class. The cat inherits its name, age, " +
+                "and birthday method from myAnimal, but has its own " +
+                "myShow() and mySpeak() methods.";
+        }
+
+        // Call the cat's own speaking method
+        function catSpeak() {
+            if (!currentCat) {
+                alert("Create a cat object first!");
+                return;
+            }
+
+            displayObject(
+                "catResult",
+                "Cat Method Called!",
+                currentCat,
+                currentCat.mySpeak()
+            );
+        }
+
+        // The cat uses the birthday method inherited from myAnimal
+        function catBirthday() {
+            if (!currentCat) {
+                alert("Create a cat object first!");
+                return;
+            }
+
+            const message = currentCat.myBirthday();
+
+            displayObject(
+                "catResult",
+                "Cat Birthday!",
+                currentCat,
+                message
+            );
+        }
+    </script>
 
 </body>
 </html>
