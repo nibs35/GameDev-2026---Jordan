@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,10 +160,8 @@
 
         <div class="assignment">
             JavaScript objects store related information using
-            properties. This example creates a randomly generated
-            person using a name, age, eye colour, and description.
-            Each property is selected separately, allowing many
-            different combinations.
+            properties. This page creates random people by choosing
+            a name, age, eye colour, and description.
         </div>
 
         <p>
@@ -181,43 +178,59 @@
         <h2>Random Person Generator</h2>
 
         <p>
-            Click either button to generate a person with randomly
+            Click a button to generate a person with randomly
             selected characteristics.
         </p>
 
-        <div class="person-card" aria-live="polite" aria-atomic="true">
+        <div class="person-card">
             <div class="person-emoji" id="personEmoji">😎</div>
 
             <div class="person-name" id="personName">
                 Your Random Person
             </div>
 
-            <div class="person-info">
-                <p><b>Age:</b> <span id="personAge">--</span></p>
-                <p><b>Eye colour:</b> <span id="personEyes">--</span></p>
-                <p><b>About:</b> <span id="personDescription">Click a button to generate a person!</span></p>
+            <div class="person-info" aria-live="polite">
+                <p>
+                    <b>Age:</b>
+                    <span id="personAge">--</span>
+                </p>
+
+                <p>
+                    <b>Eye colour:</b>
+                    <span id="personEyes">--</span>
+                </p>
+
+                <p>
+                    <b>About:</b>
+                    <span id="personDescription">
+                        Click a button to get started!
+                    </span>
+                </p>
             </div>
         </div>
 
-        <button class="demo-button" type="button" id="generateButton">
+        <button
+            class="demo-button"
+            type="button"
+            onclick="generatePerson()">
             Generate Person
         </button>
 
-        <button class="demo-button" type="button" id="surpriseButton">
+        <button
+            class="demo-button"
+            type="button"
+            onclick="generatePerson()">
             Surprise Me!
         </button>
-
-        <p id="statusMessage" role="status"></p>
     </div>
 
     <div class="section">
-        <h2>How It Works</h2>
+        <h2>How the Objects Work</h2>
 
         <p>
-            The generator uses arrays containing different names,
-            ages, eye colours, and descriptions. JavaScript
-            randomly chooses one value from each array and stores
-            the results in an object.
+            Each generated person is stored in a JavaScript object.
+            The object contains properties for the person's name,
+            age, eye colour, and description.
         </p>
 
         <pre><code>const person = {
@@ -228,8 +241,8 @@
 };</code></pre>
 
         <p>
-            Every time the generator runs, it creates a new object
-            using randomly selected properties.
+            The program selects each property separately and then
+            displays the resulting object on the page.
         </p>
     </div>
 
@@ -256,7 +269,7 @@
 </main>
 
 <script>
-    // Lists of possible characteristics
+    // Possible names
     const names = [
         "Alex",
         "Marcus",
@@ -265,6 +278,7 @@
         "Liam"
     ];
 
+    // Possible ages
     const ages = [
         18,
         21,
@@ -273,6 +287,7 @@
         35
     ];
 
+    // Possible eye colours
     const eyeColors = [
         "Blue",
         "Brown",
@@ -281,14 +296,16 @@
         "Grey"
     ];
 
+    // Possible descriptions
     const descriptions = [
-        "Enjoys playing video games and hanging out with friends.",
-        "Loves music, plays guitar, and enjoys going to concerts.",
-        "Is into sports, staying active, and trying new things.",
-        "Enjoys technology, computers, and learning how things work.",
-        "Loves movies, good food, and spending time outdoors."
+        "Enjoys video games and hanging out with friends.",
+        "Loves music and playing guitar.",
+        "Enjoys sports and staying active.",
+        "Likes computers and learning about technology.",
+        "Loves movies, good food, and the outdoors."
     ];
 
+    // Possible emojis
     const emojis = [
         "😎",
         "🎸",
@@ -297,13 +314,13 @@
         "🚀"
     ];
 
-    // Select a random item from any array
-    function randomItem(array) {
-        const index = Math.floor(Math.random() * array.length);
-        return array[index];
+    // Return one randomly selected item from a list
+    function randomItem(list) {
+        const randomIndex = Math.floor(Math.random() * list.length);
+        return list[randomIndex];
     }
 
-    // Generate a person object and show it on the page
+    // Create a new person object and display the information
     function generatePerson() {
         const person = {
             name: randomItem(names),
@@ -313,7 +330,6 @@
             emoji: randomItem(emojis)
         };
 
-        // Display each property of the generated object
         document.getElementById("personName").textContent =
             person.name;
 
@@ -328,26 +344,9 @@
 
         document.getElementById("personEmoji").textContent =
             person.emoji;
-
-        document.getElementById("statusMessage").textContent =
-            "A new person has been generated!";
-
-        // Return the object in case it is needed later
-        return person;
     }
 
-    // Connect both buttons to the generator
-    document.getElementById("generateButton").addEventListener(
-        "click",
-        generatePerson
-    );
-
-    document.getElementById("surpriseButton").addEventListener(
-        "click",
-        generatePerson
-    );
-
-    // Automatically generate the first person when the page loads
+    // Show a random person immediately when the page loads
     generatePerson();
 </script>
 
