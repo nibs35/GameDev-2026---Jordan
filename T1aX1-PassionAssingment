@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>T1aX1 - Flappy Apple - Jordan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background-color: #24476b;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        .game-section {
+            background: white;
+            padding: 22px;
+            margin: 25px auto;
+            max-width: 700px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+            text-align: center;
+        }
+
+        .description {
+            background: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+            margin: 15px 0 20px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .game-frame {
+            max-width: 480px;
+            margin: auto;
+            border: 5px solid #24476b;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #70d6f7;
+            box-shadow: 0 4px 12px #ccd5df;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            touch-action: manipulation;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        button {
+            background: #24476b;
+            color: white;
+            border: 1px solid #24476b;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #376a9c;
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 18px 0;
+        }
+
+        .stat-card {
+            background: #eef3f9;
+            border: 1px solid #b7c8d9;
+            padding: 12px 22px;
+            border-radius: 8px;
+            min-width: 110px;
+        }
+
+        .stat-card span {
+            display: block;
+            color: #52677d;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card strong {
+            color: #24476b;
+            font-size: 24px;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #b7c8d9;
+            border-radius: 8px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .instructions strong {
+            color: #24476b;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #b7c8d9;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 12px;
+            }
+
+            h1 {
+                padding: 20px 10px;
+                font-size: 25px;
+            }
+
+            .game-section {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🍎 Flappy Apple</h1>
+
+    <div class="game-section">
+
+        <h2>My Passion Project</h2>
+
+        <div class="description">
+            <b>Welcome to Flappy Apple!</b><br>
+            This is my own take on the classic Flappy Bird game.
+            Instead of a bird, you control a little pixel-art apple.
+            Fly through the pipes, avoid crashing, and try to beat
+            your high score!
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span>YOUR SCORE</span>
+                <strong id="score">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>BEST SCORE</span>
+                <strong id="best">0</strong>
+            </div>
+        </div>
+
+        <div class="game-frame">
+            <canvas id="game" width="480" height="640"
+                aria-label="Flappy Apple. Press Space or click to flap.">
+            </canvas>
+        </div>
+
+        <div class="controls">
+            <button id="startButton" type="button">Start Game</button>
+            <button id="restartButton" type="button">Restart</button>
+        </div>
+
+        <div class="instructions">
+            <strong>How to Play</strong><br>
+            🍎 Press <strong>SPACE</strong>, <strong>UP ARROW</strong>,
+            click, or tap to flap upward.<br>
+            🟢 Avoid hitting the pipes, ceiling, and ground.<br>
+            ⭐ Pass through each pair of pipes to earn one point.<br>
+            🔄 If you crash, press Space or click to play again.
+        </div>
+
+    </div>
+
+    <footer>
+        T1aX1 Passion Assignment | GameDev 2026 - Jordan
+    </footer>
+
+    <script>
+    (() => {
+        "use strict";
+
+        // ==========================================
+        // 1. CANVAS AND GAME SETTINGS
+        // ==========================================
+
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
+        const GROUND_HEIGHT = 70;
+        const GROUND_Y = HEIGHT - GROUND_HEIGHT;
+
+        const GRAVITY = 0.32;
+        const FLAP_STRENGTH = -6.2;
+        const PIPE_WIDTH = 68;
+        const PIPE_GAP = 170;
+        const PIPE_SPEED = 2.6;
+        const PIPE_INTERVAL = 92;
+
+        // ==========================================
+        // 2. GAME VARIABLES
+        // ==========================================
+
+        let apple;
+        let pipes;
+        let clouds;
+        let score = 0;
+        let bestScore = 0;
+        let frames = 0;
+        let groundOffset = 0;
+        let gameState = "ready";
+
+        // ==========================================
+        // 3. RESET THE GAME
+        // ==========================================
+
+        function resetGame() {
+            apple = {
+                x: 110,
+                y: 290,
+                velocity: 0,
+                rotation: 0
+            };
+
+            pipes = [];
+            score = 0;
+            frames = 0;
+            groundOffset = 0;
+
+            clouds = [
+                { x: 40, y: 100, size: 1 },
+                { x: 260, y: 180, size: 0.8 },
+                { x: 420, y: 75, size: 0.9 },
+                { x: 175, y: 300, size: 0.65 }
+            ];
+
+            gameState = "ready";
+            updateStats();
+            updateButtons();
+            draw();
+        }
+
+        function startGame() {
+            if (gameState === "ready") {
+                gameState = "playing";
+                apple.velocity = FLAP_STRENGTH;
+                updateButtons();
+            }
+        }
+
+        function restartGame() {
+            resetGame();
+            startGame();
+        }
+
+        function updateStats() {
+            document.getElementById("score").textContent = score;
+            document.getElementById("best").textContent = bestScore;
+        }
+
+        function updateButtons() {
+            const button = document.getElementById("startButton");
+
+            if (gameState === "playing") {
+                button.textContent = "Playing...";
+            } else if (gameState === "gameover") {
+                button.textContent = "Play Again";
+            } else {
+                button.textContent = "Start Game";
+            }
+        }
+
+        // ==========================================
+        // 4. DRAW BACKGROUND AND CLOUDS
+        // ==========================================
+
+        function drawBackground() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
+
+            gradient.addColorStop(0, "#52c8f0");
+            gradient.addColorStop(1, "#b5efff");
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+            // Distant rolling hills
+            ctx.fillStyle = "#a4df93";
+            ctx.beginPath();
+            ctx.moveTo(0, GROUND_Y - 65);
+
+            for (let x = 0; x <= WIDTH; x += 20) {
+                const y = GROUND_Y - 65 + Math.sin(x * 0.035) * 18;
+                ctx.lineTo(x, y);
+            }
+
+            ctx.lineTo(WIDTH, GROUND_Y);
+            ctx.lineTo(0, GROUND_Y);
+            ctx.closePath();
+            ctx.fill();
+
+            clouds.forEach(drawCloud);
+        }
+
+        function drawCloud(cloud) {
+            const x = cloud.x;
+            const y = cloud.y;
+            const s = cloud.size;
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(x, y, 55 * s, 17 * s);
+            ctx.fillRect(x + 10 * s, y - 10 * s, 25 * s, 27 * s);
+            ctx.fillRect(x + 28 * s, y - 18 * s, 28 * s, 35 * s);
+            ctx.fillRect(x + 48 * s, y - 5 * s, 24 * s, 22 * s);
+
+            ctx.fillStyle = "#e5f9ff";
+            ctx.fillRect(x + 15 * s, y - 7 * s, 20 * s, 7 * s);
+            ctx.fillRect(x + 35 * s, y - 14 * s, 17 * s, 7 * s);
+        }
+
+        // ==========================================
+        // 5. DRAW GREEN PIPES
+        // ==========================================
+
+        function drawPipe(pipe) {
+            const x = Math.round(pipe.x);
+            const w = PIPE_WIDTH;
+            const cap = 18;
+            const bottomY = pipe.top + PIPE_GAP;
+
+            // Top pipe
+            ctx.fillStyle = "#168b35";
+            ctx.fillRect(x, 0, w, pipe.top);
+            ctx.fillRect(x - 5, pipe.top - cap, w + 10, cap);
+
+            ctx.fillStyle = "#39c94f";
+            ctx.fillRect(x + 7, 0, 12, pipe.top);
+            ctx.fillRect(x + 7, pipe.top - cap, 12, cap);
+
+            ctx.fillStyle = "#78ed62";
+            ctx.fillRect(x + 22, 0, 12, pipe.top);
+            ctx.fillRect(x + 22, pipe.top - cap, 12, cap);
+
+            ctx.fillStyle = "#116b2a";
+            ctx.fillRect(x + w - 9, 0, 9, pipe.top);
+            ctx.fillRect(x + w - 9, pipe.top - cap, 9, cap);
+
+            // Bottom pipe
+            ctx.fillStyle = "#168b35";
+            ctx.fillRect(x, bottomY, w, GROUND_Y - bottomY);
+            ctx.fillRect(x - 5, bottomY, w + 10, cap);
+
+            ctx.fillStyle = "#39c94f";
+            ctx.fillRect(x + 7, bottomY, 12, GROUND_Y - bottomY);
+
+            ctx.fillStyle = "#78ed62";
+            ctx.fillRect(x + 22, bottomY, 12, GROUND_Y - bottomY);
+
+            ctx.fillStyle = "#116b2a";
+            ctx.fillRect(x + w - 9, bottomY, 9, GROUND_Y - bottomY);
+        }
+
+        // ==========================================
+        // 6. DRAW PIXEL-ART APPLE
+        // ==========================================
+
+        function drawApple() {
+            ctx.save();
+
+            ctx.translate(apple.x, apple.y);
+            ctx.rotate(apple.rotation);
+
+            // Dark outline and shadow
+            ctx.fillStyle = "#b91d24";
+            ctx.fillRect(-12, -7, 24, 23);
+            ctx.fillRect(-8, -13, 16, 7);
+            ctx.fillRect(-8, 16, 16, 4);
+
+            // Red body
+            ctx.fillStyle = "#ed2636";
+            ctx.fillRect(-16, -9, 32, 24);
+            ctx.fillRect(-12, -15, 24, 31);
+            ctx.fillRect(-7, -18, 14, 35);
+
+            // Shading at bottom
+            ctx.fillStyle = "#b9172a";
+            ctx.fillRect(-12, 12, 24, 5);
+            ctx.fillRect(-7, 17, 14, 3);
+            ctx.fillRect(10, 8, 6, 6);
+
+            // Bright red highlight
+            ctx.fillStyle = "#ff4a49";
+            ctx.fillRect(-12, -11, 8, 20);
+            ctx.fillRect(-7, -15, 10, 6);
+
+            // Shine
+            ctx.fillStyle = "#fff3c2";
+            ctx.fillRect(-11, -10, 6, 5);
+            ctx.fillRect(-7, -6, 3, 3);
+
+            // Brown stem
+            ctx.fillStyle = "#7a431f";
+            ctx.fillRect(-2, -23, 5, 9);
+            ctx.fillRect(1, -25, 3, 5);
+
+            // Green leaf
+            ctx.fillStyle = "#247c31";
+            ctx.fillRect(2, -25, 13, 5);
+            ctx.fillRect(6, -29, 10, 5);
+            ctx.fillRect(9, -25, 8, 4);
+
+            ctx.fillStyle = "#66d64e";
+            ctx.fillRect(6, -25, 8, 3);
+            ctx.fillRect(10, -28, 5, 3);
+
+            // Eye white
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(5, -7, 10, 13);
+            ctx.fillRect(2, -4, 15, 7);
+
+            // Pupil
+            ctx.fillStyle = "#202c3b";
+            ctx.fillRect(11, -3, 5, 7);
+
+            // Eye shine
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(12, -2, 2, 2);
+
+            // Smile
+            ctx.fillStyle = "#8b1621";
+            ctx.fillRect(5, 9, 7, 3);
+            ctx.fillRect(9, 12, 4, 2);
+
+            // Small green side leaf
+            ctx.fillStyle = "#55bb42";
+            ctx.fillRect(-19, 1, 8, 7);
+            ctx.fillRect(-15, 5, 9, 5);
+            ctx.fillRect(-11, 8, 7, 4);
+
+            ctx.restore();
+        }
+
+        // ==========================================
+        // 7. DRAW SCROLLING GROUND
+        // ==========================================
+
+        function drawGround() {
+            ctx.fillStyle = "#287b35";
+            ctx.fillRect(0, GROUND_Y, WIDTH, GROUND_HEIGHT);
+
+            // Grass
+            ctx.fillStyle = "#7ed957";
+            ctx.fillRect(0, GROUND_Y + 5, WIDTH, 16);
+
+            ctx.fillStyle = "#4bbd45";
+
+            for (let x = -20; x < WIDTH + 20; x += 24) {
+                const grassX = x - (groundOffset % 24);
+
+                ctx.fillRect(grassX, GROUND_Y + 2, 12, 5);
+                ctx.fillRect(grassX + 12, GROUND_Y + 9, 8, 5);
+            }
+
+            // Dirt
+            ctx.fillStyle = "#d7a05a";
+            ctx.fillRect(0, GROUND_Y + 21, WIDTH, 49);
+
+            ctx.fillStyle = "#f1ca7a";
+
+            for (let x = -10; x < WIDTH + 10; x += 32) {
+                const dirtX = x - (groundOffset % 32);
+
+                ctx.fillRect(dirtX, GROUND_Y + 28, 15, 5);
+                ctx.fillRect(dirtX + 12, GROUND_Y + 47, 11, 4);
+            }
+
+            ctx.fillStyle = "#8b5b32";
+            ctx.fillRect(0, HEIGHT - 5, WIDTH, 5);
+        }
+
+        // ==========================================
+        // 8. DRAW SCORE ON THE GAME
+        // ==========================================
+
+        function drawScore() {
+            ctx.textAlign = "center";
+            ctx.font = "bold 42px Arial";
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#24476b";
+
+            ctx.strokeText(score, WIDTH / 2, 65);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(score, WIDTH / 2, 65);
+
+            ctx.textAlign = "left";
+        }
+
+        // ==========================================
+        // 9. MENU AND GAME OVER PANELS
+        // ==========================================
+
+        function drawPanel(title, line1, line2) {
+            const panelX = 45;
+            const panelY = 215;
+            const panelW = WIDTH - 90;
+            const panelH = 190;
+
+            // Shadow
+            ctx.fillStyle = "#24476b";
+            ctx.fillRect(panelX + 5, panelY + 5, panelW, panelH);
+
+            // Panel background
+            ctx.fillStyle = "#fff4d5";
+            ctx.fillRect(panelX, panelY, panelW, panelH);
+
+            ctx.strokeStyle = "#24476b";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(panelX, panelY, panelW, panelH);
+
+            ctx.textAlign = "center";
+
+            ctx.fillStyle = "#24476b";
+            ctx.font = "bold 29px Arial";
+            ctx.fillText(title, WIDTH / 2, panelY + 43);
+
+            ctx.fillStyle = "#263445";
+            ctx.font = "16px Arial";
+            ctx.fillText(line1, WIDTH / 2, panelY + 82);
+            ctx.fillText(line2, WIDTH / 2, panelY + 110);
+
+            if (gameState === "ready") {
+                ctx.fillStyle = "#299640";
+                ctx.fillRect(WIDTH / 2 - 72, panelY + 128, 144, 40);
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 18px Arial";
+                ctx.fillText("PLAY!", WIDTH / 2, panelY + 154);
+            }
+
+            ctx.textAlign = "left";
+        }
+
+        // ==========================================
+        // 10. DRAW EVERYTHING
+        // ==========================================
+
+        function draw() {
+            drawBackground();
+
+            pipes.forEach(drawPipe);
+
+            drawGround();
+            drawApple();
+            drawScore();
+
+            if (gameState === "ready") {
+                drawPanel(
+                    "FLAPPY APPLE",
+                    "Tap or press SPACE to flap!",
+                    "Avoid the pipes!"
+                );
+            }
+
+            if (gameState === "gameover") {
+                drawPanel(
+                    "GAME OVER!",
+                    "Score: " + score + "   Best: " + bestScore,
+                    "Tap or press SPACE to try again!"
+                );
+            }
+        }
+
+        // ==========================================
+        // 11. GENERATE RANDOM PIPE GAPS
+        // ==========================================
+
+        function createPipe() {
+            const minTop = 65;
+            const maxTop = GROUND_Y - PIPE_GAP - 65;
+
+            const top = minTop +
+                Math.random() * (maxTop - minTop);
+
+            pipes.push({
+                x: WIDTH + 10,
+                top: top,
+                scored: false
+            });
+        }
+
+        // ==========================================
+        // 12. COLLISION DETECTION
+        // ==========================================
+
+        function checkCollision(pipe) {
+            const radius = 13;
+
+            const appleLeft = apple.x - radius;
+            const appleRight = apple.x + radius;
+            const appleTop = apple.y - radius;
+            const appleBottom = apple.y + radius;
+
+            const pipeLeft = pipe.x - 5;
+            const pipeRight = pipe.x + PIPE_WIDTH + 5;
+
+            const overlapsHorizontally =
+                appleRight > pipeLeft &&
+                appleLeft < pipeRight;
+
+            if (!overlapsHorizontally) {
+                return false;
+            }
+
+            const hitsTop = appleTop < pipe.top;
+            const hitsBottom = appleBottom > pipe.top + PIPE_GAP;
+
+            return hitsTop || hitsBottom;
+        }
+
+        function endGame() {
+            if (gameState !== "playing") {
+                return;
+            }
+
+            gameState = "gameover";
+            bestScore = Math.max(bestScore, score);
+
+            updateStats();
+            updateButtons();
+        }
+
+        // ==========================================
+        // 13. UPDATE GAME PHYSICS
+        // ==========================================
+
+        function update() {
+            if (gameState === "playing") {
+                frames++;
+
+                // Gravity pulls the apple downward
+                apple.velocity += GRAVITY;
+                apple.y += apple.velocity;
+
+                // Tilt while falling or rising
+                apple.rotation = Math.max(
+                    -0.4,
+                    Math.min(0.8, apple.velocity * 0.07)
+                );
+
+                // Create a new pipe pair
+                if (frames % PIPE_INTERVAL === 0) {
+                    createPipe();
+                }
+
+                pipes.forEach(pipe => {
+                    pipe.x -= PIPE_SPEED;
+
+                    // Award a point when the apple passes a pipe
+                    if (
+                        !pipe.scored &&
+                        pipe.x + PIPE_WIDTH < apple.x
+                    ) {
+                        pipe.scored = true;
+                        score++;
+                        updateStats();
+                    }
+
+                    if (checkCollision(pipe)) {
+                        endGame();
+                    }
+                });
+
+                // Remove pipes that have left the screen
+                pipes = pipes.filter(
+                    pipe => pipe.x + PIPE_WIDTH > 0
+                );
+
+                // Ceiling and ground collision
+                if (
+                    apple.y - 15 < 0 ||
+                    apple.y + 15 > GROUND_Y
+                ) {
+                    endGame();
+                }
+
+                // Scroll the ground
+                groundOffset += PIPE_SPEED;
+
+                // Move the clouds
+                clouds.forEach(cloud => {
+                    cloud.x -= 0.4;
+
+                    if (cloud.x < -90) {
+                        cloud.x = WIDTH + 20;
+                        cloud.y = 50 + Math.random() * 260;
+                    }
+                });
+            }
+
+            if (gameState === "ready") {
+                // Idle floating animation
+                apple.y = 290 + Math.sin(Date.now() / 220) * 6;
+            }
+        }
+
+        // ==========================================
+        // 14. PLAYER INPUT
+        // ==========================================
+
+        function flap() {
+            if (gameState === "ready") {
+                startGame();
+                return;
+            }
+
+            if (gameState === "gameover") {
+                restartGame();
+                return;
+            }
+
+            if (gameState === "playing") {
+                apple.velocity = FLAP_STRENGTH;
+            }
+        }
+
+        canvas.addEventListener("pointerdown", event => {
+            event.preventDefault();
+            flap();
+        });
+
+        document.addEventListener("keydown", event => {
+            if (
+                event.code === "Space" ||
+                event.code === "ArrowUp"
+            ) {
+                event.preventDefault();
+
+                if (!event.repeat) {
+                    flap();
+                }
+            }
+        });
+
+        document.getElementById("startButton").addEventListener(
+            "click",
+            () => {
+                if (gameState === "gameover") {
+                    restartGame();
+                } else if (gameState === "ready") {
+                    startGame();
+                }
+            }
+        );
+
+        document.getElementById("restartButton").addEventListener(
+            "click",
+            restartGame
+        );
+
+        // ==========================================
+        // 15. MAIN GAME LOOP
+        // ==========================================
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Launch the game
+        resetGame();
+        gameLoop();
+
+    })();
+    </script>
+
+</body>
+</html>
+```
