@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Online - Jordan</title>
+
+    <!-- PeerJS provides the connection between two players. No separate server code is needed. -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+            padding: 30px 16px;
+            line-height: 1.6;
+        }
+
+        main { max-width: 850px; margin: 0 auto; }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            background-color: #24476b;
+            padding: 22px;
+            border-radius: 12px;
+            margin: 0 0 22px;
+        }
+
+        h2 { color: #24476b; margin-top: 0; }
+
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .online-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .sub-panel {
+            background: #f5f8fc;
+            border: 1px solid #d5e0ec;
+            border-radius: 9px;
+            padding: 15px;
+            min-width: 0;
+        }
+
+        label { display: block; font-weight: bold; margin: 8px 0 5px; }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #aebfd0;
+            border-radius: 7px;
+            font-size: 15px;
+            color: #263445;
+        }
+
+        input:focus { outline: 3px solid #c6dced; border-color: #6593bd; }
+
+        button {
+            background-color: #24476b;
+            color: white;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px 5px 0 0;
+            transition: 0.15s;
+        }
+
+        button:hover { background-color: #1769aa; transform: translateY(-1px); }
+        button:disabled { background: #9aa9b8; cursor: not-allowed; transform: none; }
+        .secondary { background: #64788d; }
+        .danger { background: #a33d45; }
+
+        #status {
+            background: #e8f1fa;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+            padding: 11px 14px;
+            margin-top: 14px;
+            font-weight: bold;
+        }
+
+        #roomDisplay {
+            overflow-wrap: anywhere;
+            font-family: Consolas, monospace;
+            background: #eaf0f6;
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            min-height: 38px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .player {
+            flex: 1;
+            min-width: 120px;
+            background: #f5f8fc;
+            border: 2px solid #d5e0ec;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .player.active { border-color: #1769aa; background: #e7f2fc; }
+        .mark { font-size: 22px; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            margin: 0;
+            padding: 0;
+            border: 2px solid #b7c8d9;
+            border-radius: 10px;
+            background: #f7faff;
+            color: #24476b;
+            font-size: clamp(42px, 10vw, 66px);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell:hover:not(:disabled) { background: #e5f0fa; border-color: #6593bd; }
+        .cell:disabled { opacity: 1; cursor: default; }
+        .cell.x { color: #1769aa; }
+        .cell.o { color: #c06b24; }
+        .cell.winning { background: #dcefdc; border-color: #4c9654; }
+
+        #gameMessage { text-align: center; font-size: 18px; font-weight: bold; margin: 16px 0 4px; }
+        .small { color: #617286; font-size: 13px; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 620px) {
+            .online-panel { grid-template-columns: 1fr; }
+            body { padding: 16px 10px; }
+            .section { padding: 15px; }
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <h1>Online Tic Tac Toe</h1>
+
+    <section class="section">
+        <h2>Play Online</h2>
+        <p>Play with a friend over the internet. One person creates a room and shares the room code. The other person joins using that code.</p>
+
+        <div class="online-panel">
+            <div class="sub-panel">
+                <h3>1. Create a room</h3>
+                <p class="small">You will play as X. Share your room code with your friend.</p>
+                <button id="createButton" type="button">Create Online Room</button>
+                <div id="roomArea" class="hidden">
+                    <label>Your room code</label>
+                    <div id="roomDisplay"></div>
+                    <button id="copyButton" type="button">Copy Room Code</button>
+                </div>
+            </div>
+
+            <div class="sub-panel">
+                <h3>2. Join a room</h3>
+                <p class="small">Enter the room code your friend shared with you. You will play as O.</p>
+                <label for="joinCode">Room code</label>
+                <input id="joinCode" type="text" placeholder="Paste room code here" autocomplete="off">
+                <button id="joinButton" type="button">Join Online Room</button>
+            </div>
+        </div>
+
+        <div id="status" role="status" aria-live="polite">Not connected. Create a room or join a friend's room to play online.</div>
+        <p class="small">Both players need an internet connection. Keep this page open while playing.</p>
+    </section>
+
+    <section class="section">
+        <h2>Game</h2>
+        <div class="game-info">
+            <div class="player" id="playerX">Player X <span class="mark">×</span><br><span class="small" id="xName">Room host</span></div>
+            <div class="player" id="playerO">Player O <span class="mark">○</span><br><span class="small" id="oName">Room guest</span></div>
+        </div>
+
+        <div class="board" id="board" aria-label="Tic Tac Toe board">
+            <button class="cell" data-index="0" aria-label="Top left"></button>
+            <button class="cell" data-index="1" aria-label="Top middle"></button>
+            <button class="cell" data-index="2" aria-label="Top right"></button>
+            <button class="cell" data-index="3" aria-label="Middle left"></button>
+            <button class="cell" data-index="4" aria-label="Center"></button>
+            <button class="cell" data-index="5" aria-label="Middle right"></button>
+            <button class="cell" data-index="6" aria-label="Bottom left"></button>
+            <button class="cell" data-index="7" aria-label="Bottom middle"></button>
+            <button class="cell" data-index="8" aria-label="Bottom right"></button>
+        </div>
+
+        <div id="gameMessage" aria-live="polite">Create or join a room to begin.</div>
+        <div style="text-align:center">
+            <button id="resetButton" type="button" class="secondary">New Game</button>
+            <button id="disconnectButton" type="button" class="danger">Disconnect</button>
+        </div>
+        <p class="small" style="text-align:center">New Game resets the board for both players. Only the connected players can make moves.</p>
+    </section>
+
+    <section class="section">
+        <h2>How it works</h2>
+        <ol>
+            <li>Player 1 clicks <b>Create Online Room</b>.</li>
+            <li>Player 1 copies and sends the room code to Player 2.</li>
+            <li>Player 2 pastes the code and clicks <b>Join Online Room</b>.</li>
+            <li>Player X goes first. Players take turns until someone wins or the board is full.</li>
+        </ol>
+        <p class="small">This is a peer-to-peer game using PeerJS. GitHub Pages can host the HTML file, while PeerJS's public signalling service helps the two browsers find each other. Network or browser restrictions may prevent a connection on some networks.</p>
+    </section>
+</main>
+
+<script>
+(() => {
+    "use strict";
+
+    const $ = (id) => document.getElementById(id);
+    const cells = Array.from(document.querySelectorAll(".cell"));
+    const winningLines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ];
+
+    let peer = null;
+    let connection = null;
+    let role = null; // "host" is X; "guest" is O.
+    let board = Array(9).fill("");
+    let turn = "X";
+    let gameOver = false;
+    let winnerLine = [];
+    let connected = false;
+
+    function setStatus(message) {
+        $("status").textContent = message;
+    }
+
+    function getWinner(currentBoard) {
+        for (const line of winningLines) {
+            const [a, b, c] = line;
+            if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
+                return { winner: currentBoard[a], line };
+            }
+        }
+        return null;
+    }
+
+    function render() {
+        cells.forEach((cell, index) => {
+            const value = board[index];
+            cell.textContent = value === "X" ? "×" : value === "O" ? "○" : "";
+            cell.classList.toggle("x", value === "X");
+            cell.classList.toggle("o", value === "O");
+            cell.classList.toggle("winning", winnerLine.includes(index));
+
+            const myTurn = (role === "host" && turn === "X") || (role === "guest" && turn === "O");
+            cell.disabled = !connected || !myTurn || gameOver || Boolean(value);
+        });
+
+        $("playerX").classList.toggle("active", connected && turn === "X" && !gameOver);
+        $("playerO").classList.toggle("active", connected && turn === "O" && !gameOver);
+
+        if (!connected) {
+            $("gameMessage").textContent = "Create or join a room to begin.";
+        } else if (gameOver && getWinner(board)) {
+            $("gameMessage").textContent = getWinner(board).winner + " wins!";
+        } else if (gameOver) {
+            $("gameMessage").textContent = "It's a draw!";
+        } else {
+            $("gameMessage").textContent = "Player " + turn + "'s turn";
+        }
+    }
+
+    function sendState() {
+        if (role === "host" && connection && connection.open) {
+            connection.send({
+                type: "state",
+                board,
+                turn,
+                gameOver,
+                winnerLine
+            });
+        }
+    }
+
+    function applyMove(index, mark) {
+        if (!Number.isInteger(index) || index < 0 || index > 8) return false;
+        if (gameOver || board[index] !== "" || mark !== turn) return false;
+
+        board[index] = mark;
+        const result = getWinner(board);
+        if (result) {
+            gameOver = true;
+            winnerLine = result.line;
+        } else if (board.every(Boolean)) {
+            gameOver = true;
+            winnerLine = [];
+        } else {
+            turn = turn === "X" ? "O" : "X";
+        }
+
+        render();
+        sendState();
+        return true;
+    }
+
+    function receiveHostMessage(data) {
+        if (!data || typeof data !== "object") return;
+
+        if (data.type === "move") {
+            // The host validates every guest move; the guest cannot choose its own mark.
+            if (role === "host" && connected) applyMove(data.index, "O");
+        } else if (data.type === "reset") {
+            if (role === "host") resetBoard(true);
+        }
+    }
+
+    function receiveGuestMessage(data) {
+        if (!data || typeof data !== "object") return;
+        if (data.type === "state" && role === "guest") {
+            if (!Array.isArray(data.board) || data.board.length !== 9) return;
+            if (!data.board.every(v => v === "" || v === "X" || v === "O")) return;
+            board = data.board.slice();
+            turn = data.turn === "O" ? "O" : "X";
+            gameOver = Boolean(data.gameOver);
+            winnerLine = Array.isArray(data.winnerLine) ? data.winnerLine.filter(n => Number.isInteger(n) && n >= 0 && n <= 8) : [];
+            render();
+        }
+    }
+
+    function attachHostConnection(conn) {
+        if (connection && connection.open) {
+            conn.on("open", () => conn.close());
+            return;
+        }
+        connection = conn;
+        conn.on("open", () => {
+            connected = true;
+            $("xName").textContent = "You (host)";
+            $("oName").textContent = "Friend (guest)";
+            setStatus("Connected! You are X. Your friend is O.");
+            render();
+            sendState();
+        });
+        conn.on("data", receiveHostMessage);
+        conn.on("close", () => {
+            connected = false;
+            connection = null;
+            setStatus("Your opponent disconnected. You can share the room code again or disconnect.");
+            render();
+        });
+        conn.on("error", (error) => setStatus("Connection error: " + (error.message || "Please try again.")));
+    }
+
+    function createRoom() {
+        if (typeof Peer === "undefined") {
+            setStatus("PeerJS could not load. Check your internet connection and reload the page.");
+            return;
+        }
+        cleanupConnection();
+        role = "host";
+        setStatus("Creating your room...");
+        $("createButton").disabled = true;
+
+        peer = new Peer();
+        peer.on("open", (id) => {
+            $("roomDisplay").textContent = id;
+            $("roomArea").classList.remove("hidden");
+            setStatus("Room created. Send the room code to your friend and wait for them to join.");
+            $("createButton").disabled = false;
+        });
+        peer.on("connection", attachHostConnection);
+        peer.on("error", (error) => {
+            $("createButton").disabled = false;
+            setStatus("Could not create/connect to a room: " + (error.message || "Unknown error") + ". Try again.");
+        });
+        peer.on("disconnected", () => {
+            setStatus("Lost connection to the PeerJS signalling service. Reconnecting...");
+            if (peer && !peer.destroyed) peer.reconnect();
+        });
+    }
+
+    function joinRoom() {
+        if (typeof Peer === "undefined") {
+            setStatus("PeerJS could not load. Check your internet connection and reload the page.");
+            return;
+        }
+        const roomCode = $("joinCode").value.trim();
+        if (!roomCode) {
+            setStatus("Enter your friend's room code first.");
+            $("joinCode").focus();
+            return;
+        }
+
+        cleanupConnection();
+        role = "guest";
+        setStatus("Connecting to room...");
+        $("joinButton").disabled = true;
+
+        peer = new Peer();
+        peer.on("open", () => {
+            connection = peer.connect(roomCode, { reliable: true });
+            connection.on("open", () => {
+                connected = true;
+                $("xName").textContent = "Friend (host)";
+                $("oName").textContent = "You (guest)";
+                setStatus("Connected! Your friend is X. You are O.");
+                $("joinButton").disabled = false;
+                render();
+            });
+            connection.on("data", receiveGuestMessage);
+            connection.on("close", () => {
+                connected = false;
+                setStatus("The host disconnected.");
+                render();
+            });
+            connection.on("error", (error) => {
+                connected = false;
+                setStatus("Connection error: " + (error.message || "Check the room code and try again."));
+                $("joinButton").disabled = false;
+                render();
+            });
+        });
+        peer.on("error", (error) => {
+            $("joinButton").disabled = false;
+            setStatus("Could not join: " + (error.message || "Check the room code and try again."));
+        });
+    }
+
+    function resetBoard(sendToGuest) {
+        board = Array(9).fill("");
+        turn = "X";
+        gameOver = false;
+        winnerLine = [];
+        render();
+        if (sendToGuest) sendState();
+    }
+
+    function resetGame() {
+        if (!connected) {
+            setStatus("Connect to another player before starting a new online game.");
+            return;
+        }
+        if (role === "host") {
+            resetBoard(true);
+        } else if (connection && connection.open) {
+            connection.send({ type: "reset" });
+        }
+    }
+
+    function cleanupConnection() {
+        connected = false;
+        if (connection) {
+            try { connection.close(); } catch (_) {}
+            connection = null;
+        }
+        if (peer) {
+            try { peer.destroy(); } catch (_) {}
+            peer = null;
+        }
+        role = null;
+        $("roomArea").classList.add("hidden");
+        $("createButton").disabled = false;
+        $("joinButton").disabled = false;
+        board = Array(9).fill("");
+        turn = "X";
+        gameOver = false;
+        winnerLine = [];
+        render();
+    }
+
+    cells.forEach(cell => {
+        cell.addEventListener("click", () => {
+            if (!connected || gameOver) return;
+            const index = Number(cell.dataset.index);
+            if (role === "host") {
+                applyMove(index, "X");
+            } else if (role === "guest" && turn === "O" && connection && connection.open) {
+                // The host applies and broadcasts the authoritative move.
+                connection.send({ type: "move", index });
+            }
+        });
+    });
+
+    $("createButton").addEventListener("click", createRoom);
+    $("joinButton").addEventListener("click", joinRoom);
+    $("resetButton").addEventListener("click", resetGame);
+    $("disconnectButton").addEventListener("click", () => {
+        cleanupConnection();
+        setStatus("Disconnected. Create a room or join a friend's room to play.");
+    });
+    $("copyButton").addEventListener("click", async () => {
+        const code = $("roomDisplay").textContent;
+        try {
+            await navigator.clipboard.writeText(code);
+            setStatus("Room code copied. Send it to your friend!");
+        } catch (_) {
+            setStatus("Select and copy the room code shown above.");
+        }
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>
