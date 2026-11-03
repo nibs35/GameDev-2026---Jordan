@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Putt Party - Online Mini Golf</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+:root{--navy:#24476b;--blue:#1769aa;--ink:#263445;--page:#eef3f9;--line:#c6d4e2}
+*{box-sizing:border-box}
+body{margin:0;padding:18px 12px 35px;background:var(--page);color:var(--ink);font:15px/1.5 Arial,sans-serif}
+main{max-width:1120px;margin:auto}
+h1{margin:0 0 16px;padding:20px;text-align:center;color:white;background:var(--navy);border-radius:12px;font-size:clamp(25px,4vw,36px);letter-spacing:1px}
+h2,h3{color:var(--navy);margin:0 0 9px}
+.panel{background:white;padding:17px;margin:15px 0;border-radius:12px;box-shadow:0 3px 10px #ccd5df}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sub{background:#f5f8fc;border:1px solid #d5e0ec;border-radius:9px;padding:14px}
+label{font-weight:bold;display:block;margin:7px 0 4px}
+input{width:100%;padding:10px;border:1px solid #aebfd0;border-radius:7px;font:inherit}
+button{border:0;border-radius:7px;padding:10px 14px;margin:5px 4px 0 0;background:var(--navy);color:white;font-weight:bold;font: bold 14px Arial;cursor:pointer}
+button:hover{background:var(--blue)}button:disabled{opacity:.45;cursor:not-allowed}
+.alt{background:#64788d}.gold{background:#a66b13}.red{background:#a33d45}
+#status{margin-top:12px;padding:10px 13px;border-left:5px solid var(--navy);border-radius:6px;background:#e8f1fa;font-weight:bold}
+.small{font-size:12px;color:#64788d}
+#code{font: bold 25px Consolas,monospace;letter-spacing:6px;color:var(--navy);background:#e8eff6;padding:8px;border-radius:6px;overflow-wrap:anywhere}
+.gamegrid{display:grid;grid-template-columns:minmax(0,1fr) 255px;gap:14px;align-items:start}
+canvas{display:block;width:100%;height:auto;aspect-ratio:450/280;border:5px solid #263445;border-radius:8px;background:#73b86c;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none;cursor:crosshair}
+.side{display:grid;gap:10px}
+.card{background:#f5f8fc;border:1px solid #d5e0ec;border-radius:8px;padding:12px}
+#players{display:grid;gap:5px}
+.player{display:flex;align-items:center;gap:7px;background:white;border:1px solid #d9e2eb;border-radius:5px;padding:6px}
+.player.active{outline:2px solid var(--blue);background:#eaf4fd}
+.dot{width:12px;height:12px;display:inline-block;flex:none}
+.pname{flex:1;font-weight:bold;overflow-wrap:anywhere}
+#powerups{display:grid;gap:5px}
+.power{width:100%;margin:0;text-align:left;background:#e6eef7;color:#263445;border:1px solid #c5d5e5}
+.power.selected{background:#24476b;color:white}
+#turn{font-size:18px;font-weight:bold;color:var(--navy)}
+.hidden{display:none!important}
+footer{text-align:center;color:#64788d;font-size:12px;margin-top:18px}
+@media(max-width:800px){.gamegrid{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid,.side{grid-template-columns:1fr}.panel{padding:12px}}
+</style>
+</head>
+<body>
+<main>
+<h1>🟩 PIXEL PUTT PARTY ⛳</h1>
+<section class="panel">
+<h2>Online Multiplayer Lobby</h2>
+<p>Create a room and share its <b>6-character code</b>. Up to four players can play together online.</p>
+<div class="grid">
+ <div class="sub">
+  <h3>Create a room</h3>
+  <label for="hostName">Your name</label><input id="hostName" maxlength="14" value="Player 1">
+  <button id="create">Create Room</button>
+  <div id="hostRoom" class="hidden"><p class="small">Share this room code:</p><div id="code">------</div><button id="copy" class="alt">Copy Code</button></div>
+ </div>
+ <div class="sub">
+  <h3>Join a room</h3>
+  <label for="guestName">Your name</label><input id="guestName" maxlength="14" value="Player">
+  <label for="joinCode">6-character room code</label><input id="joinCode" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;letter-spacing:4px">
+  <button id="join">Join Room</button>
+ </div>
+</div>
+<div id="status" role="status" aria-live="polite">Not connected. Create a room or join a friend's room.</div>
+<p class="small">Online play uses PeerJS's public signalling service. The host must keep their game open for the room to remain active.</p>
+</section>
+
+<section class="panel">
+<div class="gamegrid">
+ <div>
+  <canvas id="game" width="450" height="280" aria-label="Pixel art mini golf course"></canvas>
+  <p class="small">Aim with your mouse or finger: drag backwards from your ball, then release to shoot. Pull farther for more power.</p>
+ </div>
+ <div class="side">
+  <div class="card">
+   <div id="turn">Waiting for players…</div>
+   <p id="stageInfo" class="small">Stage 1 · Hole 1 of 5 · Par 3</p>
+   <p id="shotInfo" class="small">Strokes: —</p>
+   <button id="next" class="gold" disabled>Next Hole</button>
+   <button id="restart" class="alt" disabled>Restart Hole</button>
+  </div>
+  <div class="card"><h3>Players & Scores</h3><div id="players"><span class="small">Join a room to play.</span></div></div>
+  <div class="card"><h3>Power-ups</h3><p class="small">Collect glowing items by rolling over them. Choose one to use on your next shot.</p><div id="powerups"><span class="small">No power-ups yet.</span></div></div>
+  <div class="card"><h3>Game controls</h3><ul class="small" style="padding-left:18px;margin:5px 0"><li>Drag back and release to putt.</li><li>Only the player whose turn it is can shoot.</li><li>Balls collide with each other.</li><li>Complete 5 holes in each of 5 stages.</li></ul></div>
+ </div>
+</div>
+</section>
+<section class="panel">
+<h2>25 holes · 5 pixel-art stages</h2>
+<p>Play through five themed stages, each with five holes: Sunny Park, Sandy Dunes, Frostbyte Peaks, Lava Works and Neon Night. Each stage changes the course colours, obstacle layouts and challenge. Collect power-ups, bounce off bumpers and bump other players' balls!</p>
+<p class="small">Power-ups: <b>Rocket</b> adds extra shot strength, <b>Bubble</b> reduces friction for a longer roll, and <b>Magnet</b> pulls your ball gently toward the cup for one shot.</p>
+</section>
+<footer>Pixel Putt Party · Single-file HTML game · GitHub Pages compatible</footer>
+</main>
+
+<script>
+(() => {
+"use strict";
+const $=id=>document.getElementById(id), canvas=$("game"),ctx=canvas.getContext("2d");
+const W=450,H=280,BR=5.5,MAX_PLAYERS=4;
+const COLORS=["#f05252","#438de0","#f2cf4a","#b36be0"];
+const STAGES=[
+ {name:"Sunny Park",bg:"#78bd70",fair:"#8bd17b",rough:"#438b55",wall:"#315d42",accent:"#f4dc68"},
+ {name:"Sandy Dunes",bg:"#d8b36e",fair:"#efd08b",rough:"#b58a4c",wall:"#795b38",accent:"#f6e0a0"},
+ {name:"Frostbyte Peaks",bg:"#9bcbd8",fair:"#d4f0f1",rough:"#6b9fab",wall:"#426a83",accent:"#ffffff"},
+ {name:"Lava Works",bg:"#a94f39",fair:"#d9824f",rough:"#743c36",wall:"#4b292c",accent:"#ffc15c"},
+ {name:"Neon Night",bg:"#40376e",fair:"#6254a2",rough:"#302951",wall:"#1d183c",accent:"#6ef3d5"}
+];
+const COURSE=[
+ {start:[35,140],cup:[415,140],walls:[[115,30,10,80],[115,170,10,80],[225,0,10,90],[225,190,10,90],[330,30,10,80],[330,170,10,80]],bumps:[[170,140,10],[280,140,10]],items:[[80,100,"rocket"],[250,140,"bubble"],[365,205,"magnet"]]},
+ {start:[35,235],cup:[415,45],walls:[[100,0,10,160],[100,205,10,75],[195,75,10,205],[290,0,10,160],[290,205,10,75],[380,75,10,205]],bumps:[[150,190,9],[245,55,9],[340,190,9]],items:[[55,170,"bubble"],[240,225,"rocket"],[350,65,"magnet"]]},
+ {start:[35,45],cup:[415,235],walls:[[95,0,10,120],[95,165,10,115],[190,55,10,225],[285,0,10,115],[285,165,10,115],[375,55,10,225]],bumps:[[145,140,11],[240,35,9],[335,140,11]],items:[[60,120,"magnet"],[240,245,"bubble"],[345,35,"rocket"]]},
+ {start:[35,140],cup:[415,140],walls:[[80,0,10,95],[80,185,10,95],[160,45,10,190],[240,0,10,95],[240,185,10,95],[320,45,10,190],[390,0,10,95],[390,185,10,95]],bumps:[[120,140,8],[200,140,8],[280,140,8],[360,140,8]],items:[[55,140,"rocket"],[200,35,"magnet"],[345,240,"bubble"]]},
+ {start:[35,245],cup:[415,35],walls:[[100,0,10,180],[100,220,10,60],[200,45,10,235],[300,0,10,180],[300,220,10,60],[390,45,10,235]],bumps:[[150,205,10],[250,35,10],[350,205,10]],items:[[55,190,"bubble"],[245,245,"magnet"],[350,45,"rocket"]]}
+];
+let peer=null,isHost=false,mySlot=-1,code="",links=new Map(),state=null,online=false,selectedPower=null,drag=null,loop=null,matchOver=false;
+let clientPeerReady=false,lastSent=0;
+const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const randCode=()=>Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join("");
+const stageNum=h=>Math.floor(h/5),holeNum=h=>h%5;
+const course=()=>COURSE[holeNum(state.hole)],theme=()=>STAGES[stageNum(state.hole)];
+const say=t=>$("status").textContent=t;
+const safeName=(s,f)=>String(s||"").trim().replace(/[<>]/g,"").slice(0,14)||f;
+const clone=o=>JSON.parse(JSON.stringify(o));
+function makeState(names){
+ const h=0,c=COURSE[0];
+ return {hole:h,players:names.map((n,i)=>({id:i,name:n,color:COLORS[i],strokes:0,total:0,done:false,ball:{x:c.start[0],y:c.start[1]+(i-1.5)*13,vx:0,vy:0},items:[]})),items:c.items.map((v,i)=>({x:v[0],y:v[1],kind:v[2],active:true,id:i})),turn:0,phase:"playing",winner:null,tick:0,shotInProgress:false};
+}
+function allStopped(){return state.players.every(p=>Math.hypot(p.ball.vx,p.ball.vy)<.10);}
+function activePlayer(){return state&&state.players[state.turn];}
+function connectedPlayers(){return state?state.players.length:0;}
+function sendAll(msg){if(!isHost)return;for(const c of links.values())if(c.open){try{c.send(msg)}catch(e){}}}
+function broadcast(){if(isHost&&state)sendAll({type:"state",state,matchOver});}
+function sendState(c){if(state&&c.open)c.send({type:"state",state,matchOver});}
+function renderHud(){
+ if(!state){$("turn").textContent="Waiting for players…";return}
+ const p=activePlayer();
+ $("turn").textContent=state.phase==="holeDone"?"Hole complete!":state.phase==="matchDone"?"🏆 Match complete!":p?p.name+"'s turn":"Waiting…";
+ $("stageInfo").textContent=`Stage ${stageNum(state.hole)+1}: ${STAGES[stageNum(state.hole)].name} · Hole ${holeNum(state.hole)+1}/5 · Par ${COURSE[holeNum(state.hole)].par||3}`;
+ const me=state.players[mySlot];
+ $("shotInfo").textContent=me?`Your strokes: ${me.strokes} · Total: ${me.total}`:"";
+ $("players").innerHTML="";
+ state.players.forEach((p,i)=>{
+  const d=document.createElement("div");d.className="player"+(i===state.turn&&state.phase==="playing"?" active":"");
+  const dot=document.createElement("span");dot.className="dot";dot.style.background=p.color;
+  const name=document.createElement("span");name.className="pname";name.textContent=p.name+(i===mySlot?" (you)":"");
+  const score=document.createElement("b");score.textContent=p.total+(p.done?" ✓":"");
+  d.append(dot,name,score);$("players").append(d);
+ });
+ $("powerups").innerHTML="";
+ const inventory=me?me.items:[];
+ if(!inventory.length){const s=document.createElement("span");s.className="small";s.textContent="No power-ups collected."; $("powerups").append(s)}
+ else inventory.forEach((kind,i)=>{
+  const b=document.createElement("button");b.className="power"+(selectedPower===i?" selected":"");
+  b.textContent=({rocket:"🚀 Rocket boost",bubble:"🫧 Bubble glide",magnet:"🧲 Cup magnet"})[kind]||kind;
+  b.onclick=()=>{selectedPower=selectedPower===i?null:i;renderHud()};$("powerups").append(b);
+ });
+ $("next").disabled=!(isHost&&state.phase==="holeDone");
+ $("restart").disabled=!(isHost&&state.phase==="playing");
+}
+function rectHit(b,r){
+ const [x,y,w,h]=r,cx=Math.max(x,Math.min(b.x,x+w)),cy=Math.max(y,Math.min(b.y,y+h));
+ const dx=b.x-cx,dy=b.y-cy,d=Math.hypot(dx,dy);
+ if(d<BR){if(d===0){b.x=x+w/2;b.y=y-1;return}const nx=dx/d,ny=dy/d;b.x=cx+nx*BR;b.y=cy+ny*BR;const dot=b.vx*nx+b.vy*ny;if(dot<0){b.vx-=1.65*dot*nx;b.vy-=1.65*dot*ny;}}
+}
+function collectItems(p){
+ state.items.forEach(it=>{
+  if(it.active&&Math.hypot(p.ball.x-it.x,p.ball.y-it.y)<BR+7){it.active=false;p.items.push(it.kind)}
+ });
+}
+function advanceTurn(){
+ if(!state||state.phase!=="playing")return;
+ const n=state.players.length;
+ for(let k=1;k<=n;k++){const i=(state.turn+k)%n;if(!state.players[i].done){state.turn=i;break}}
+ if(state.players.every(p=>p.done)){state.phase=state.hole===24?"matchDone":"holeDone";if(state.phase==="matchDone")matchOver=true}
+}
+function step(dt){
+ if(!isHost||!state||state.phase!=="playing")return;
+ const c=course(),st=theme();state.tick++;
+ // Moving bumper motion adds a little life to each hole.
+ state.players.forEach(p=>{
+  const b=p.ball;if(p.done)return;
+  b.x+=b.vx*dt;b.y+=b.vy*dt;
+  const friction=b.glide?0.995:0.986;
+  b.vx*=Math.pow(friction,dt*60);b.vy*=Math.pow(friction,dt*60);
+  if(b.glide){b.glide--; }
+  if(b.magnet){const dx=c.cup[0]-b.x,dy=c.cup[1]-b.y,d=Math.hypot(dx,dy)||1;b.vx+=dx/d*0.035;b.vy+=dy/d*0.035;b.magnet--; }
+  if(Math.hypot(b.vx,b.vy)<.10)b.vx=b.vy=0;
+  if(b.x<BR){b.x=BR;b.vx=Math.abs(b.vx)*.75}if(b.x>W-BR){b.x=W-BR;b.vx=-Math.abs(b.vx)*.75}
+  if(b.y<BR){b.y=BR;b.vy=Math.abs(b.vy)*.75}if(b.y>H-BR){b.y=H-BR;b.vy=-Math.abs(b.vy)*.75}
+  c.walls.forEach(r=>rectHit(b,r));
+  c.bumps.forEach(([x,y,r],i)=>{
+   const bx=x,by=y+Math.sin(state.tick/24+i)*3,dx=b.x-bx,dy=b.y-by,d=Math.hypot(dx,dy),min=BR+r;
+   if(d<min&&d>0){const nx=dx/d,ny=dy/d;b.x=bx+nx*min;b.y=by+ny*min;const v=b.vx*nx+b.vy*ny;if(v<0){b.vx-=1.8*v*nx;b.vy-=1.8*v*ny}}
+  });
+  collectItems(p);
+  const cup=c.cup;if(Math.hypot(b.x-cup[0],b.y-cup[1])<9&&Math.hypot(b.vx,b.vy)<2.8){b.x=cup[0];b.y=cup[1];b.vx=b.vy=0;p.done=true;}
+ });
+ // Elastic ball-to-ball collisions.
+ for(let i=0;i<state.players.length;i++)for(let j=i+1;j<state.players.length;j++){
+  const a=state.players[i].ball,b=state.players[j].ball,dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),min=BR*2;
+  if(d>0&&d<min){const nx=dx/d,ny=dy/d,over=(min-d)/2;a.x-=nx*over;b.x+=nx*over; a.y-=ny*over;b.y+=ny*over;
+   const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;if(rel>0){a.vx-=rel*nx*.88;a.vy-=rel*ny*.88;b.vx+=rel*nx*.88;b.vy+=rel*ny*.88;}
+  }
+ }
+ if(allStopped() && state.shotInProgress){
+  state.shotInProgress=false;
+  if(state.players.every(p=>p.done)) state.phase=state.hole===24?"matchDone":"holeDone";
+  else advanceTurn();
+ }
+}
+function drawPixel(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function draw(){
+ const st=theme(),c=course();ctx.clearRect(0,0,W,H);drawPixel(0,0,W,H,st.bg);
+ // Checkerboard turf.
+ for(let y=0;y<H;y+=16)for(let x=0;x<W;x+=16)if(((x/16+y/16)|0)%2===0)drawPixel(x,y,16,16,st.fair);
+ // Rough patches and pixel decorations.
+ for(let i=0;i<28;i++){let x=(i*83+31)%W,y=(i*47+17)%H;drawPixel(x,y,2,2,st.rough)}
+ // Walls with dark outlines and highlight pixels.
+ c.walls.forEach(([x,y,w,h])=>{drawPixel(x-2,y-2,w+4,h+4,"#172b2b");drawPixel(x,y,w,h,st.wall);drawPixel(x+2,y+2,Math.max(2,w-5),Math.max(2,h-5),st.accent)});
+ // Bumpers.
+ c.bumps.forEach(([x,y,r],i)=>{let yy=y+Math.sin((state?state.tick:0)/24+i)*3;drawPixel(x-r-2,yy-r-2,2*r+4,2*r+4,"#182c34");drawPixel(x-r,yy-r,2*r,2*r,st.accent);drawPixel(x-r+3,yy-r+3,Math.max(2,2*r-6),Math.max(2,2*r-6),st.wall)});
+ // Pickups.
+ if(state)state.items.forEach(it=>{if(!it.active)return;let col=it.kind==="rocket"?"#ff704f":it.kind==="bubble"?"#62e2e8":"#f6e15e";drawPixel(it.x-5,it.y-5,10,10,"#172b2b");drawPixel(it.x-3,it.y-3,6,6,col);drawPixel(it.x-1,it.y-1,2,2,"#ffffff")});
+ // Cup and flag.
+ const [cx,cy]=c.cup;drawPixel(cx-7,cy-7,14,14,"#172b2b");drawPixel(cx-5,cy-5,10,10,"#111820");drawPixel(cx-3,cy-3,6,6,"#05080b");drawPixel(cx+1,cy-18,2,14,"#f6f0d0");drawPixel(cx+3,cy-18,9,6,"#ed4c4c");
+ // Start tee.
+ const [sx,sy]=c.start;drawPixel(sx-7,sy-7,14,14,"#ffffff");drawPixel(sx-4,sy-4,8,8,st.rough);
+ // Balls.
+ if(state)state.players.forEach((p,i)=>{
+  const b=p.ball;drawPixel(b.x-BR+1,b.y-BR+2,BR*2,BR*2,"#172b2b");drawPixel(b.x-BR,b.y-BR,BR*2-1,BR*2-1,p.color);drawPixel(b.x-2,b.y-3,3,2,"#ffffff");
+  if(i===mySlot){ctx.strokeStyle="#fff";ctx.lineWidth=1;ctx.strokeRect(Math.round(b.x-8),Math.round(b.y-8),16,16)}
+ });
+ // Aim line and power indicator.
+ if(drag&&state){const p=state.players[mySlot];if(p){let dx=drag.x-p.ball.x,dy=drag.y-p.ball.y;ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(p.ball.x,p.ball.y);ctx.lineTo(p.ball.x-dx,p.ball.y-dy);ctx.stroke();ctx.setLineDash([]);}}
+ requestAnimationFrame(draw);
+}
+function sendSnapshot(){if(isHost)broadcast()}
+function beginShot(slot,dx,dy,power){
+ if(!isHost||!state||state.phase!=="playing"||slot!==state.turn)return;
+ const p=state.players[slot];if(!p||p.done||!allStopped())return;
+ let mag=Math.hypot(dx,dy);if(mag<3)return;
+ const max=75;let scale=Math.min(mag,max)/mag, vx=dx*scale*.105,vy=dy*scale*.105;
+ if(power==="rocket"){vx*=1.65;vy*=1.65}
+ if(power==="bubble"){vx*=1.1;vy*=1.1;p.ball.glide=240}
+ if(power==="magnet")p.ball.magnet=180;
+ p.items=p.items.filter((v,i)=>!(v===power&&i===p.items.indexOf(power)));
+ p.ball.vx=vx;p.ball.vy=vy;p.strokes++;state.turn=slot;state.shotInProgress=true;
+ broadcast();renderHud();
+}
+function handleShot(slot,dx,dy,power){
+ if(isHost)beginShot(slot,dx,dy,power);
+ else {const c=links.get("host");if(c&&c.open)c.send({type:"shot",dx,dy,power})}
+}
+function resetHole(){
+ if(!isHost||!state)return;
+ const c=course();state.players.forEach((p,i)=>{p.done=false;p.strokes=0;p.items=[];p.ball={x:c.start[0],y:c.start[1]+(i-1.5)*13,vx:0,vy:0}});
+ state.items=c.items.map((v,i)=>({x:v[0],y:v[1],kind:v[2],active:true,id:i}));state.phase="playing";state.turn=0;state.shotInProgress=false;broadcast();renderHud();
+}
+function nextHole(){
+ if(!isHost||!state||state.phase!=="holeDone")return;
+ state.players.forEach(p=>p.total+=p.strokes);
+ state.hole++;const c=course();state.players.forEach((p,i)=>{p.done=false;p.strokes=0;p.items=[];p.ball={x:c.start[0],y:c.start[1]+(i-1.5)*13,vx:0,vy:0}});
+ state.items=c.items.map((v,i)=>({x:v[0],y:v[1],kind:v[2],active:true,id:i}));state.turn=0;state.phase="playing";state.shotInProgress=false;broadcast();renderHud();
+}
+function applyState(s,finished){
+ if(!s||!Array.isArray(s.players)||s.players.length>4)return;
+ state=clone(s);matchOver=!!finished;renderHud();
+}
+function addPeerPlayer(conn,name){
+ if(!isHost)return;
+ if(state.players.length>=MAX_PLAYERS){conn.on("open",()=>conn.send({type:"full"}));return}
+ const slot=state.players.length;
+ state.players.push({id:slot,name:safeName(name,"Guest "+(slot+1)),color:COLORS[slot],strokes:0,total:0,done:false,items:[],ball:{x:course().start[0],y:course().start[1]+(slot-1.5)*13,vx:0,vy:0}});
+ links.set(String(slot),conn);
+ conn.on("data",msg=>{if(!msg||typeof msg!=="object")return;if(msg.type==="shot")beginShot(slot,Number(msg.dx),Number(msg.dy),["rocket","bubble","magnet"].includes(msg.power)?msg.power:null)});
+ conn.on("close",()=>{say(name+" disconnected. Their ball remains in the match.");links.delete(String(slot));});
+ conn.on("open",()=>{conn.send({type:"welcome",slot,state,matchOver});say(name+" joined ("+state.players.length+"/4 players).");broadcast();renderHud()});
+ renderHud();
+}
+function createRoom(){
+ if(typeof Peer==="undefined"){say("PeerJS did not load. Check internet and reload.");return}
+ cleanup();isHost=true;$("create").disabled=true;say("Finding an available six-character room code…");
+ let attempts=0;
+ function tryCode(){
+  if(attempts++>12){$("create").disabled=false;say("Could not find an available room. Try again.");return}
+  code=randCode();peer=new Peer("putt-"+code);
+  peer.on("open",id=>{
+   $("code").textContent=code;$("hostRoom").classList.remove("hidden");
+   mySlot=0;state=makeState([safeName($("hostName").value,"Host")]);online=true;
+   peer.on("connection",conn=>{
+    conn.on("data",msg=>{if(msg&&msg.type==="hello")addPeerPlayer(conn,msg.name)});
+    conn.on("open",()=>{});
+   });
+   say("Room "+code+" created. Share the code with up to 3 friends.");
+   $("create").disabled=false;renderHud();startPhysics();
+  });
+  peer.on("error",err=>{
+   if(err.type==="unavailable-id"){peer.destroy();tryCode()}
+   else {$("create").disabled=false;say("Room error: "+(err.message||err.type)+". Try again.");}
+  });
+ }
+ tryCode();
+}
+function joinRoom(){
+ if(typeof Peer==="undefined"){say("PeerJS did not load. Check internet and reload.");return}
+ const codeIn=$("joinCode").value.trim().toUpperCase();
+ if(!/^[A-Z0-9]{6}$/.test(codeIn)){say("Please enter a 6-character room code.");return}
+ cleanup();isHost=false;say("Connecting to room "+codeIn+"…");$("join").disabled=true;
+ peer=new Peer();
+ peer.on("open",()=>{
+  const conn=peer.connect("putt-"+codeIn,{reliable:true});links.set("host",conn);
+  conn.on("open",()=>conn.send({type:"hello",name:safeName($("guestName").value,"Guest")}));
+  conn.on("data",msg=>{
+   if(msg.type==="full"){say("That room already has 4 players.");cleanup();return}
+   if(msg.type==="welcome"){mySlot=msg.slot;online=true;applyState(msg.state,msg.matchOver);say("Joined room "+codeIn+"! You are player "+(mySlot+1)+".")}
+   if(msg.type==="state")applyState(msg.state,msg.matchOver);
+  });
+  conn.on("close",()=>{online=false;say("Host disconnected. The room has closed.");renderHud()});
+  conn.on("error",e=>say("Connection error: "+(e.message||"Try again.")));
+ });
+ peer.on("error",e=>{say("Could not join room. Check the code and try again.");$("join").disabled=false});
+}
+function cleanup(){
+ if(loop){clearInterval(loop);loop=null}
+ if(peer){try{peer.destroy()}catch(e){}peer=null}
+ links.clear();state=null;isHost=false;online=false;mySlot=-1;selectedPower=null;drag=null;
+ $("hostRoom").classList.add("hidden");$("create").disabled=false;$("join").disabled=false;renderHud();
+}
+function copyCode(){
+ if(!code)return;
+ navigator.clipboard.writeText(code).then(()=>say("Room code copied!")).catch(()=>say("Select the room code and copy it."));
+}
+function pointerPos(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+canvas.addEventListener("pointerdown",e=>{
+ if(!state||!online||mySlot<0||state.turn!==mySlot||state.phase!=="playing")return;
+ const p=state.players[mySlot];if(!p||!allStopped())return;
+ const pos=pointerPos(e);if(Math.hypot(pos.x-p.ball.x,pos.y-p.ball.y)<22){drag={x:pos.x,y:pos.y};canvas.setPointerCapture(e.pointerId)}
+});
+canvas.addEventListener("pointermove",e=>{if(drag){drag=pointerPos(e)}});
+canvas.addEventListener("pointerup",e=>{
+ if(!drag)return;const p=state&&state.players[mySlot];if(p){const pos=pointerPos(e),dx=p.ball.x-pos.x,dy=p.ball.y-pos.y;
+  if(Math.hypot(dx,dy)>4){const power=selectedPower===null?null:p.items[selectedPower];handleShot(mySlot,dx,dy,power);selectedPower=null;renderHud()}}
+ drag=null;
+});
+$("create").onclick=createRoom;$("join").onclick=joinRoom;$("copy").onclick=copyCode;
+$("next").onclick=nextHole;$("restart").onclick=resetHole;
+$("joinCode").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6)});
+function frame(){
+ if(isHost&&state&&state.phase==="playing"){
+  // Small fixed steps keep physics stable.
+  for(let i=0;i<2;i++)step(1/60);
+  if(state.tick%3===0)broadcast();
+ }
+ requestAnimationFrame(frame);
+}
+renderHud();draw();frame();
+})();
+</script>
+</body>
+</html>
