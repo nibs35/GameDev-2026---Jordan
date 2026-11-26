@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T1A15 Mandelbrot - Jordan</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+            background: black;
+        }
+
+        #myHint {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: white;
+            background: #24476b;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        #myHint:hover {
+            background: #1769aa;
+        }
+
+        #myModal {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: #263445;
+            padding: 25px;
+            border-radius: 12px;
+            width: 300px;
+            box-shadow: 0 3px 10px #ccd5df;
+            text-align: center;
+        }
+
+        #myModal h2 {
+            color: #24476b;
+        }
+
+        button {
+            background: #24476b;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1769aa;
+        }
+    </style>
+</head>
+
+<body>
+
+<canvas id="myCanvas"></canvas>
+
+<div id="myHint" onclick="myShowInfo()">Mandelbrot Info</div>
+
+<div id="myModal">
+    <h2>Mandelbrot Fractal</h2>
+    <p>The Mandelbrot fractal is created by repeatedly using the formula:</p>
+    <p><b>Z<sub>n+1</sub> = Z<sub>n</sub>² + C</b></p>
+    <p>Colours show how quickly points escape the set. Zoom in to explore more patterns.</p>
+    <button onclick="myHideInfo()">Close</button>
+</div>
+
+<script>
+    let myCanvas = document.getElementById('myCanvas');
+    let myContext = myCanvas.getContext('2d');
+
+    let myZoom = 1;
+    let myCenterX = -0.5;
+    let myCenterY = 0;
+    let myPreviewScale = 0.5;
+    let myMouseX = 0;
+    let myMouseY = 0;
+
+    function myResizeCanvas() {
+        myCanvas.width = window.innerWidth;
+        myCanvas.height = window.innerHeight;
+        myDrawFractal();
+    }
+
+    async function myDrawFractal() {
+        let myImage = myContext.createImageData(myCanvas.width, myCanvas.height);
+
+        for (let myY = 0; myY < myCanvas.height; myY++) {
+            for (let myX = 0; myX < myCanvas.width; myX++) {
+                let myReal = (myX / myCanvas.width - 0.5) * 3.5 / myZoom + myCenterX;
+                let myImaginary = (myY / myCanvas.height - 0.5) * 2 / myZoom + myCenterY;
+
+                let myZReal = 0;
+                let myZImaginary = 0;
+                let myIterations = 0;
+                let myMaxIterations = 100;
+
+                while (myZReal * myZReal + myZImaginary * myZImaginary <= 4 && myIterations < myMaxIterations) {
+                    let myTemp = myZReal * myZReal - myZImaginary * myZImaginary + myReal;
+                    myZImaginary = 2 * myZReal * myZImaginary + myImaginary;
+                    myZReal = myTemp;
+                    myIterations++;
+                }
+
+                let myIndex = (myY * myCanvas.width + myX) * 4;
+
+                if (myIterations === myMaxIterations) {
+                    myImage.data[myIndex] = 0;
+                    myImage.data[myIndex + 1] = 0;
+                    myImage.data[myIndex + 2] = 0;
+                } else {
+                    let myColour = myIterations * 8;
+
+                    myImage.data[myIndex] = Math.sin(myColour * 0.05) * 127 + 128;
+                    myImage.data[myIndex + 1] = Math.sin(myColour * 0.07 + 2) * 127 + 128;
+                    myImage.data[myIndex + 2] = Math.sin(myColour * 0.09 + 4) * 127 + 128;
+                }
+
+                myImage.data[myIndex + 3] = 255;
+            }
+        }
+
+        myContext.putImageData(myImage, 0, 0);
+    }
+
+    function myDrawPreview() {
+        let myBoxWidth = myCanvas.width * myPreviewScale;
+        let myBoxHeight = myCanvas.height * myPreviewScale;
+
+        myContext.strokeStyle = 'white';
+        myContext.setLineDash([10, 5]);
+        myContext.strokeRect(
+            myMouseX - myBoxWidth / 2,
+            myMouseY - myBoxHeight / 2,
+            myBoxWidth,
+            myBoxHeight
+        );
+        myContext.setLineDash([]);
+    }
+
+    myCanvas.onmousemove = function(myEvent) {
+        myMouseX = myEvent.clientX;
+        myMouseY = myEvent.clientY;
+        myDrawFractal();
+        myDrawPreview();
+    };
+
+    myCanvas.onwheel = function(myEvent) {
+        myEvent.preventDefault();
+
+        if (myEvent.deltaY < 0) {
+            myPreviewScale = Math.min(myPreviewScale * 1.2, 0.9);
+        } else {
+            myPreviewScale = Math.max(myPreviewScale / 1.2, 0.1);
+        }
+
+        myDrawFractal();
+        myDrawPreview();
+    };
+
+    myCanvas.onclick = function() {
+        myCenterX += (myMouseX / myCanvas.width - 0.5) * 3.5 / myZoom;
+        myCenterY += (myMouseY / myCanvas.height - 0.5) * 2 / myZoom;
+
+        myZoom /= myPreviewScale;
+        myPreviewScale = 0.5;
+
+        myDrawFractal();
+    };
+
+    function myShowInfo() {
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function myHideInfo() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    window.onresize = myResizeCanvas;
+
+    myResizeCanvas();
+</script>
+
+</body>
+</html>
