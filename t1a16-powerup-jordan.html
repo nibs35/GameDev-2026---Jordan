@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T1A16 Super Power - Jordan</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f9;
+            color: #263445;
+            margin: 40px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background-color: #24476b;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h2 {
+            color: #24476b;
+            border-bottom: 2px solid #8aaed0;
+            padding-bottom: 8px;
+        }
+
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccd5df;
+        }
+
+        .description {
+            background-color: #dceaf7;
+            padding: 15px;
+            border-left: 5px solid #24476b;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #24476b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1769aa;
+        }
+
+        #myDiv01 {
+            background-color: #eef3f9;
+            border: 1px solid #b7c8d9;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #b7c8d9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>T1A16 Super Power - Jordan</h1>
+
+    <div class="section">
+        <h2>Stateful Hero Energy Tracker</h2>
+
+        <p>
+            Welcome to the Stateful Hero Energy Tracker!
+            Train your hero and watch their power decrease.
+        </p>
+
+        <div class="description">
+            <b>Assignment:</b>
+            <ol>
+                <li>Create a global object called myHero.</li>
+                <li>Subtract 10 power every time the button is clicked.</li>
+                <li>Use if, else if and else to change the comments.</li>
+                <li>When power reaches zero, show an alert and reset power.</li>
+                <li>Display the updated object inside myDiv01.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Train Your Hero</h2>
+
+        <p>Click the button below to begin training!</p>
+
+        <p><b>Initial Power: 100</b></p>
+
+        <button onclick="trainHero()">
+            Train Hero
+        </button>
+
+        <div id="myDiv01">
+            Your hero is ready for training!
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>How It Works</h2>
+
+        <p>
+            Every click removes 10 power from your hero.
+            The comments change depending on how much power is left.
+            When power reaches zero, it resets back to 100.
+        </p>
+    </div>
+
+    <script>
+
+        // Global hero object
+        let myHero = {
+            name: "Captain Code",
+            power: 100,
+            comment: "Ready for training!"
+        };
+
+        // Function to train the hero
+        function trainHero() {
+
+            // Remove 10 power
+            myHero.power -= 10;
+
+            // Check remaining power
+            if (myHero.power > 60) {
+                myHero.comment = "High Power! Keep going!";
+            }
+
+            else if (myHero.power > 30) {
+                myHero.comment = "Medium Power! Getting tired!";
+            }
+
+            else if (myHero.power > 0) {
+                myHero.comment = "Low Power! Almost exhausted!";
+            }
+
+            else {
+                alert("Your hero has run out of power!");
+
+                myHero.comment = "Power restored! Ready for training!";
+                myHero.power = 100;
+            }
+
+            // Display updated hero information
+            document.getElementById("myDiv01").innerHTML =
+                "<b>Hero Name:</b> " + myHero.name + "<br>" +
+                "<b>Power:</b> " + myHero.power + "<br>" +
+                "<b>Comment:</b> " + myHero.comment;
+        }
+
+    </script>
+
+    <footer>
+        GameDev 2026 | Jordan's Project Portfolio
+    </footer>
+
+</body>
+</html>
